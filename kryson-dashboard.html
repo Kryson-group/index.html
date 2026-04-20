@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kryson — Sales OS</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="googlebot" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#09090c;
+  --bg2:#111116;
+  --bg3:#18181f;
+  --bg4:#222229;
+  --border:#1f1f28;
+  --border2:#2a2a35;
+  --text:#f0eee8;
+  --text2:#9896a0;
+  --text3:#5a5866;
+  --gold:#c4a35a;
+  --gold2:#e8c97a;
+  --gold-bg:rgba(196,163,90,.1);
+  --gold-border:rgba(196,163,90,.25);
+  --green:#4ade80;
+  --green-bg:rgba(74,222,128,.08);
+  --green-border:rgba(74,222,128,.2);
+  --red:#f87171;
+  --red-bg:rgba(248,113,113,.08);
+  --red-border:rgba(248,113,113,.2);
+  --amber:#fbbf24;
+  --amber-bg:rgba(251,191,36,.08);
+  --amber-border:rgba(251,191,36,.2);
+  --blue:#60a5fa;
+  --blue-bg:rgba(96,165,250,.08);
+  --blue-border:rgba(96,165,250,.2);
+  --purple:#a78bfa;
+  --purple-bg:rgba(167,139,250,.08);
+  --purple-border:rgba(167,139,250,.2);
+}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;-webkit-font-smoothing:antialiased;line-height:1.5}
+input,select,textarea{font-family:'Inter',system-ui,sans-serif;font-size:13px;background:var(--bg3);color:var(--text);border:1px solid var(--border2);border-radius:7px;padding:9px 13px;width:100%;outline:none;transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(196,163,90,.12)}
+input[type=number]{-moz-appearance:textfield}
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+select option{background:var(--bg3)}
+button{font-family:'Inter',system-ui,sans-serif;cursor:pointer;border:none;border-radius:7px;transition:all .15s;font-size:13px;font-weight:500}
+.btn-primary{background:var(--gold);color:#0a0808;padding:9px 20px;font-weight:600;letter-spacing:-.01em}
+.btn-primary:hover{background:var(--gold2);transform:translateY(-1px);box-shadow:0 4px 12px rgba(196,163,90,.3)}
+.btn-ghost{background:transparent;color:var(--text2);padding:8px 14px;border:1px solid var(--border2)}
+.btn-ghost:hover{border-color:var(--border2);color:var(--text);background:var(--bg3)}
+.btn-danger{background:var(--red-bg);color:var(--red);padding:6px 12px;border:1px solid var(--red-border)}
+.btn-danger:hover{background:rgba(248,113,113,.15)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn-icon{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:6px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);font-size:14px}
+.btn-icon:hover{background:var(--bg4);color:var(--text)}
+
+/* NAV */
+.nav{background:var(--bg);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:100}
+.nav-logo{display:flex;align-items:center;gap:10px}
+.nav-logo-mark{width:28px;height:28px;background:var(--gold);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#0a0808;letter-spacing:-.03em;flex-shrink:0}
+.nav-logo-text{font-size:15px;font-weight:700;letter-spacing:-.02em;color:var(--text)}
+.nav-logo-sub{font-size:11px;color:var(--text3);font-weight:400;margin-left:2px}
+.nav-tabs{display:flex;gap:2px}
+.nav-tab{padding:8px 14px;font-size:13px;color:var(--text3);cursor:pointer;background:none;border:none;font-family:inherit;border-radius:6px;transition:all .15s;font-weight:500}
+.nav-tab:hover{color:var(--text2);background:var(--bg3)}
+.nav-tab.active{color:var(--text);background:var(--bg3)}
+.nav-tab.active-gold{color:var(--gold);background:var(--gold-bg)}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-user-name{font-size:13px;font-weight:600;color:var(--text)}
+.nav-user-role{font-size:11px;color:var(--text3);letter-spacing:.03em}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--gold-bg);border:1px solid var(--gold-border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--gold);flex-shrink:0}
+.avatar-lg{width:40px;height:40px;font-size:14px}
+
+/* LAYOUT */
+.page{padding:28px 28px 60px}
+.page-header{margin-bottom:28px}
+.page-title{font-size:22px;font-weight:700;letter-spacing:-.03em;color:var(--text);margin-bottom:4px}
+.page-sub{font-size:13px;color:var(--text3)}
+.row-between{display:flex;align-items:center;justify-content:space-between}
+.row{display:flex;align-items:center;gap:12px}
+.gap-8{gap:8px}
+
+/* CARDS */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:22px 24px}
+.card-sm{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.card-hover{transition:border-color .15s,transform .15s,box-shadow .15s;cursor:pointer}
+.card-hover:hover{border-color:var(--gold-border);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+
+/* METRICS */
+.metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.metric-grid-3{grid-template-columns:repeat(3,1fr)}
+.metric-grid-6{grid-template-columns:repeat(6,1fr)}
+.metric{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px 20px;position:relative;overflow:hidden}
+.metric::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(196,163,90,.04) 0%,transparent 60%);pointer-events:none}
+.metric-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;font-weight:600}
+.metric-val{font-size:28px;font-weight:700;letter-spacing:-.04em;color:var(--text);line-height:1}
+.metric-sub{font-size:12px;color:var(--text3);margin-top:7px}
+.metric-trend{font-size:11px;margin-top:6px;display:inline-flex;align-items:center;gap:3px;font-weight:500}
+.trend-up{color:var(--green)}
+.trend-dn{color:var(--red)}
+.trend-neu{color:var(--text3)}
+
+/* TABLE */
+.table-wrap{border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-size:11px;font-weight:600;color:var(--text3);padding:11px 14px;background:var(--bg3);border-bottom:1px solid var(--border);white-space:nowrap;text-transform:uppercase;letter-spacing:.06em}
+td{padding:12px 14px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.015)}
+.td-name{color:var(--text);font-weight:500}
+
+/* PILLS */
+.pill{display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;letter-spacing:.02em;white-space:nowrap}
+.pill-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.pill-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.pill-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+.pill-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border)}
+.pill-purple{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border)}
+.pill-gray{background:var(--bg3);color:var(--text3);border:1px solid var(--border2)}
+.pill-gold{background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-border)}
+
+/* FORMS */
+.form-group{margin-bottom:16px}
+.form-label{font-size:12px;color:var(--text3);margin-bottom:7px;display:block;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.form-section{margin-bottom:18px;padding:18px;background:var(--bg3);border-radius:10px;border:1px solid var(--border)}
+.form-section-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px}
+
+/* MODAL */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(4px)}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:14px;padding:30px;width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.6)}
+.modal-lg{width:680px}
+.modal-title{font-size:18px;font-weight:700;letter-spacing:-.03em;margin-bottom:22px}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:22px;padding-top:20px;border-top:1px solid var(--border)}
+
+/* ALERTS */
+.alert{padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:16px;font-weight:500}
+.alert-success{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.alert-danger{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.alert-info{background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-border)}
+
+/* MISC */
+.divider{height:1px;background:var(--border);margin:20px 0}
+.empty{text-align:center;padding:60px 20px;color:var(--text3)}
+.empty-icon{font-size:32px;margin-bottom:14px;opacity:.4}
+.mono{font-family:'SF Mono','Consolas',monospace;font-size:12px}
+.badge{display:inline-block;width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.badge-green{background:var(--green)}
+.badge-red{background:var(--red)}
+.badge-amber{background:var(--amber)}
+
+/* SUPER ADMIN */
+.client-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:22px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.client-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gold);opacity:0;transition:opacity .2s}
+.client-card:hover{border-color:var(--gold-border);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,.5)}
+.client-card:hover::before{opacity:1}
+.client-name{font-size:16px;font-weight:700;letter-spacing:-.02em;color:var(--text);margin-bottom:4px}
+.client-meta{font-size:12px;color:var(--text3);margin-bottom:18px}
+.client-stat{text-align:center}
+.client-stat-val{font-size:20px;font-weight:700;color:var(--text);letter-spacing:-.03em}
+.client-stat-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-top:2px}
+
+/* CHARTS */
+.chart-wrap{position:relative}
+.chart-label{font-size:10px;color:var(--text3);fill:var(--text3);font-family:'Inter',sans-serif}
+.funnel-stage{transition:opacity .2s}
+.funnel-stage:hover{opacity:.85}
+.bar-rect{transition:opacity .2s}
+.bar-rect:hover{opacity:.8}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);background-image:radial-gradient(ellipse at 20% 50%,rgba(196,163,90,.06) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(96,165,250,.04) 0%,transparent 50%)}
+.login-box{width:420px}
+.login-logo-wrap{text-align:center;margin-bottom:32px}
+.login-logo-mark{width:48px;height:48px;background:var(--gold);border-radius:12px;display:inline-flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#0a0808;margin-bottom:12px;letter-spacing:-.04em}
+.login-logo-name{font-size:20px;font-weight:700;letter-spacing:-.03em;color:var(--text)}
+.login-logo-sub{font-size:13px;color:var(--text3);margin-top:3px}
+
+/* PERF BAR */
+.perf-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.perf-bar-track{flex:1;height:5px;background:var(--bg4);border-radius:3px;overflow:hidden}
+.perf-bar-fill{height:100%;border-radius:3px;background:var(--gold);transition:width .4s ease}
+
+/* LEADERBOARD */
+.lb-row{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--border)}
+.lb-row:last-child{border-bottom:none}
+.lb-rank{font-size:12px;font-weight:700;color:var(--text3);width:20px;text-align:center;font-family:'SF Mono','Consolas',monospace}
+.lb-rank-1{color:var(--gold)}
+.lb-rank-2{color:var(--text2)}
+.lb-rank-3{color:var(--amber)}
+
+/* SPARKLINE */
+.sparkline{display:flex;align-items:flex-end;gap:2px;height:28px}
+.spark-bar{background:var(--gold-bg);border-radius:2px 2px 0 0;flex:1;min-height:2px;border:1px solid var(--gold-border);border-bottom:none}
+.spark-bar-today{background:var(--gold);border-color:var(--gold)}
+
+/* GRADIENT TEXTS */
+.text-gold{color:var(--gold)}
+.text-grad{background:linear-gradient(135deg,var(--gold) 0%,var(--gold2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+/* WIZARD */
+.wizard-step{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text3);font-weight:500}
+.wizard-step-num{width:22px;height:22px;border-radius:50%;background:var(--bg4);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text3);flex-shrink:0}
+.wizard-step.active .wizard-step-num{background:var(--gold);border-color:var(--gold);color:#0a0808}
+.wizard-step.active{color:var(--text)}
+.wizard-step.done .wizard-step-num{background:var(--green-bg);border-color:var(--green-border);color:var(--green)}
+.wizard-divider{flex:1;height:1px;background:var(--border);max-width:32px}
+
+/* TARGET PROGRESS */
+.target-ring{position:relative;display:inline-flex;align-items:center;justify-content:center}
+
+@media(max-width:900px){.metric-grid{grid-template-columns:repeat(2,1fr)}.form-row{grid-template-columns:1fr}}
+@media(max-width:600px){.metric-grid{grid-template-columns:1fr}.page{padding:16px}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script>
+'use strict';
+const {useState,useEffect,useMemo,useRef,useCallback}=React;
+const h=React.createElement;
+
+// ═══════════════════════════════════════════════════════
+// CONSTANTS
+// ═══════════════════════════════════════════════════════
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const INDUSTRIES=['Coaching','Consulting','Agency','SaaS','Real Estate','Finance','E-Commerce','Health & Wellness','Education','Other'];
+const CURRENCIES=[{sym:'£',label:'GBP (£)'},{sym:'$',label:'USD ($)'},{sym:'€',label:'EUR (€)'},{sym:'₦',label:'NGN (₦)'},{sym:'A$',label:'AUD (A$)'},{sym:'CA$',label:'CAD (CA$)'},{sym:'AED',label:'AED'}];
+
+const SUPER_ADMIN_EMAIL='kyle@krysongroup.com';
+const SUPER_ADMIN_PASS='Kryson2024!';
+const STORAGE_KEY='kryson_v3';
+
+// ═══════════════════════════════════════════════════════
+// DATA LAYER
+// ═══════════════════════════════════════════════════════
+const SEED_DATA={clients:[],users:[],entries:[]};
+
+function loadData(){
+  try{const s=localStorage.getItem(STORAGE_KEY);if(s)return JSON.parse(s);}catch(_){}
+  return SEED_DATA;
+}
+function saveData(d){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(d));}catch(_){}}
+
+// ═══════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════
+const initials=n=>(n||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+const sum=(arr,k)=>arr.reduce((a,r)=>a+(r[k]||0),0);
+const pct=(a,b)=>b>0?((a/b)*100).toFixed(1)+'%':'—';
+const currency=(c,n)=>c+Math.round(n||0).toLocaleString();
+const todayStr=()=>{const d=new Date();return`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;};
+const nowMonth=()=>MONTHS[new Date().getMonth()];
+const nowYear=()=>new Date().getFullYear();
+
+function rolePill(role){
+  const map={SDR:'pill-blue',Closer:'pill-amber',Admin:'pill-gold',SuperAdmin:'pill-purple'};
+  return h('span',{className:'pill '+(map[role]||'pill-gray')},role);
+}
+function statusPill(active){
+  return h('span',{className:'pill '+(active?'pill-green':'pill-gray')},active?'Active':'Inactive');
+}
+function ratePill(val){
+  if(val==='—')return h('span',{style:{color:'var(--text3)'}},val);
+  const n=parseFloat(val);
+  if(isNaN(n))return h('span',{style:{color:'var(--text3)'}},val);
+  const cls=n>=60?'pill-green':n>=35?'pill-amber':'pill-red';
+  return h('span',{className:'pill '+cls},val);
+}
+
+// ───── STATS ENGINE (FIXED RATES) ─────────────────────
+// Key fix: SDR metrics never mixed with Closer metrics
+function calcRepStats(entries){
+  const sdr={dials:sum(entries,'sdr_dials'),connects:sum(entries,'sdr_connects'),booked:sum(entries,'sdr_booked_calls'),scheduled:sum(entries,'sdr_scheduled'),noShows:sum(entries,'sdr_no_shows'),followups:sum(entries,'sdr_followups'),newLeads:sum(entries,'sdr_new_leads'),newLeadsContacted:sum(entries,'sdr_new_leads_contacted'),fiveMin:sum(entries,'sdr_5min')};
+  const cs={totalBooked:sum(entries,'cs_total_booked'),showed:sum(entries,'cs_showed'),pif:sum(entries,'cs_pif'),instalment:sum(entries,'cs_instalment'),cashGen:sum(entries,'cs_cash_gen'),cashColl:sum(entries,'cs_cash_coll'),refunded:sum(entries,'cs_refunded'),deposits:sum(entries,'cs_deposits'),disq:sum(entries,'cs_disq'),inbound:sum(entries,'cs_inbound')};
+  const sales=cs.pif+cs.instalment;
+  return{
+    ...sdr,...cs,sales,entries:entries.length,
+    connectRate:pct(sdr.connects,sdr.dials),   // connects / dials
+    bookRate:pct(sdr.booked,sdr.dials),         // booked / dials
+    showRate:pct(cs.showed,cs.totalBooked),     // showed / total_booked (ONLY closer)
+    closeRate:pct(sales,cs.showed),             // sales / showed
+    revPerShow:cs.showed>0?cs.cashGen/cs.showed:0,
+    revPerBooked:cs.totalBooked>0?cs.cashGen/cs.totalBooked:0,
+  };
+}
+
+// Team stats split properly by role
+function calcTeamStats(entries,users,month){
+  const filterByMonth=e=>!month||e.month===month;
+  const sdrIds=new Set(users.filter(u=>u.role==='SDR').map(u=>u.id));
+  const closerIds=new Set(users.filter(u=>u.role==='Closer').map(u=>u.id));
+  // Admins can log both SDR and Closer data
+  const adminIds=new Set(users.filter(u=>u.role==='Admin').map(u=>u.id));
+  const allE=entries.filter(filterByMonth);
+  const sdrE=allE.filter(e=>sdrIds.has(e.userId)||adminIds.has(e.userId));
+  const csE=allE.filter(e=>closerIds.has(e.userId)||adminIds.has(e.userId));
+  const dials=sum(sdrE,'sdr_dials');
+  const connects=sum(sdrE,'sdr_connects');
+  const sdrBooked=sum(sdrE,'sdr_booked_calls');
+  const csBooked=sum(csE,'cs_total_booked');
+  const showed=sum(csE,'cs_showed');
+  const pif=sum(csE,'cs_pif');
+  const instalment=sum(csE,'cs_instalment');
+  const sales=pif+instalment;
+  const cashGen=sum(csE,'cs_cash_gen');
+  const cashColl=sum(csE,'cs_cash_coll');
+  return{
+    dials,connects,sdrBooked,csBooked,showed,sales,cashGen,cashColl,pif,instalment,
+    connectRate:pct(connects,dials),       // SDR-only: connects / dials
+    bookRate:pct(sdrBooked,dials),         // SDR-only: booked / dials
+    showRate:pct(showed,csBooked),         // Closer-only: showed / total_booked
+    closeRate:pct(sales,showed),           // Closer-only: sales / showed
+    revPerShow:showed>0?cashGen/showed:0,
+  };
+}
+
+// ═══════════════════════════════════════════════════════
+// SVG CHART COMPONENTS
+// ═══════════════════════════════════════════════════════
+function FunnelChart({stages}){
+  // stages=[{label,value,sub,color}]
+  if(!stages||stages.length===0)return null;
+  const W=280,H=stages.length*68;
+  const maxV=Math.max(...stages.map(s=>s.value),1);
+  const minW=60,maxW=W-40;
+  return h('svg',{width:W,height:H,viewBox:`0 0 ${W} ${H}`},
+    stages.map((s,i)=>{
+      const ratio=s.value/maxV;
+      const w=minW+(maxW-minW)*ratio;
+      const x=(W-w)/2;
+      const y=i*68;
+      const colors=['#c4a35a','#60a5fa','#4ade80','#a78bfa','#f87171'];
+      const col=s.color||colors[i%colors.length];
+      const pctLabel=i>0&&stages[i-1].value>0?((s.value/stages[i-1].value)*100).toFixed(0)+'%':null;
+      return h('g',{key:i},
+        h('rect',{x,y:y+4,width:w,height:56,fill:col+'18',stroke:col+'55',strokeWidth:1,rx:6}),
+        h('text',{x:W/2,y:y+28,textAnchor:'middle',fill:'#f0eee8',fontSize:13,fontWeight:700,fontFamily:'Inter,sans-serif'},
+          s.value.toLocaleString()),
+        h('text',{x:W/2,y:y+44,textAnchor:'middle',fill:'#9896a0',fontSize:10,fontFamily:'Inter,sans-serif'},
+          s.label),
+        pctLabel&&h('text',{x:W/2,y:y+2,textAnchor:'middle',fill:col,fontSize:9,fontWeight:600,fontFamily:'Inter,sans-serif'},
+          '↓ '+pctLabel+' conversion')
+      );
+    })
+  );
+}
+
+function BarChart({data,color,currency:cur,height=120}){
+  if(!data||data.length===0)return null;
+  const W=350,H=height+30;
+  const maxV=Math.max(...data.map(d=>d.value),1);
+  const bW=Math.floor((W-10)/data.length)-3;
+  return h('svg',{width:'100%',viewBox:`0 0 ${W} ${H}`,preserveAspectRatio:'none'},
+    data.map((d,i)=>{
+      const bH=maxV>0?Math.max(2,((d.value/maxV)*(H-30))):2;
+      const x=5+i*(bW+3);
+      const y=(H-30)-bH;
+      const isToday=d.today;
+      const col=isToday?(color||'#c4a35a'):(color||'#c4a35a')+'55';
+      return h('g',{key:i},
+        h('rect',{x,y,width:bW,height:bH,fill:col,rx:2}),
+        h('text',{x:x+bW/2,y:H-4,textAnchor:'middle',fill:'#5a5866',fontSize:8,fontFamily:'Inter,sans-serif'},
+          d.label)
+      );
+    })
+  );
+}
+
+function GaugeArc({pct:p,color,size=80}){
+  const r=30,cx=size/2,cy=size/2+6;
+  const angle=Math.min(p/100,1)*Math.PI;
+  const sx=cx-r,sy=cy;
+  const ex=cx-r*Math.cos(angle),ey=cy-r*Math.sin(angle);
+  const lg=angle>Math.PI/2?1:0;
+  const bg=`M ${sx} ${sy} A ${r} ${r} 0 0 1 ${cx+r} ${cy}`;
+  const fg=`M ${sx} ${sy} A ${r} ${r} 0 ${lg} 1 ${ex} ${ey}`;
+  return h('svg',{width:size,height:size/2+10,viewBox:`0 0 ${size} ${size/2+10}`},
+    h('path',{d:bg,fill:'none',stroke:'#222229',strokeWidth:6,strokeLinecap:'round'}),
+    h('path',{d:fg,fill:'none',stroke:color||'#c4a35a',strokeWidth:6,strokeLinecap:'round'}),
+    h('text',{x:cx,y:cy+2,textAnchor:'middle',fill:'#f0eee8',fontSize:11,fontWeight:700,fontFamily:'Inter,sans-serif'},
+      Math.min(Math.round(p),999)+'%')
+  );
+}
+
+function Sparkline({values,color}){
+  const max=Math.max(...values,1);
+  return h('div',{className:'sparkline'},
+    values.map((v,i)=>h('div',{
+      key:i,
+      className:'spark-bar'+(i===values.length-1?' spark-bar-today':''),
+      style:{height:Math.max(2,Math.round((v/max)*28))+'px',background:(i===values.length-1)?(color||'var(--gold)'):'var(--bg4)',borderColor:(i===values.length-1)?(color||'var(--gold)'):'var(--border2)'}
+    }))
+  );
+}
+
+// ═══════════════════════════════════════════════════════
+// ENTRY MODAL
+// ═══════════════════════════════════════════════════════
+function EntryModal({userId,userName,userRole,existing,onSave,onClose,cur}){
+  const nm=nowMonth();
+  const blank={date:todayStr(),month:nm,year:nowYear(),userId,
+    sdr_dials:0,sdr_new_leads:0,sdr_new_leads_contacted:0,sdr_connects:0,
+    sdr_5min:0,sdr_booked_calls:0,sdr_scheduled:0,sdr_no_shows:0,sdr_followups:0,
+    obj1:'',obj2:'',obj3:'',
+    cs_disq:0,cs_inbound:0,cs_total_booked:0,cs_showed:0,
+    cs_deposits:0,cs_pif:0,cs_instalment:0,
+    cs_cash_gen:0,cs_cash_coll:0,cs_refunded:0,
+    cs_avg_deal:0,cs_difficulty:'',cs_notes:''};
+  const [f,setF]=useState(existing||blank);
+  const [err,setErr]=useState('');
+  const set=(k,v)=>setF(p=>({...p,[k]:v}));
+  const num=(k,lbl,min=0,max=9999)=>h('div',{className:'form-group'},
+    h('label',{className:'form-label'},lbl),
+    h('input',{type:'number',min,max,value:f[k]||'',
+      onChange:ev=>set(k,parseFloat(ev.target.value)||0),
+      style:{textAlign:'center'}})
+  );
+  const cur2=(k,lbl)=>h('div',{className:'form-group'},
+    h('label',{className:'form-label'},lbl+' ('+cur+')'),
+    h('input',{type:'number',min:0,step:0.01,value:f[k]||'',
+      onChange:ev=>set(k,parseFloat(ev.target.value)||0),
+      style:{textAlign:'center'}})
+  );
+  const isSdr=userRole==='SDR';
+  const isCloser=userRole==='Closer';
+  const isAdmin=userRole==='Admin';
+  const go=()=>{
+    if(isCloser||isAdmin){
+      if(f.cs_showed>f.cs_total_booked&&f.cs_total_booked>0){
+        return setErr(`Shows (${f.cs_showed}) cannot exceed Total Booked (${f.cs_total_booked}). Please check your data.`);
+      }
+    }
+    if(isSdr||isAdmin){
+      if(f.sdr_connects>f.sdr_dials&&f.sdr_dials>0){
+        return setErr(`Connects (${f.sdr_connects}) cannot exceed Dials (${f.sdr_dials}). Please check your data.`);
+      }
+    }
+    onSave(f);
+  };
+  const r2=(a,b)=>h('div',{className:'form-row'},a,b);
+  const r3=(a,b,c)=>h('div',{className:'form-row-3'},a,b,c);
+  return h('div',{className:'modal-backdrop',onClick:ev=>ev.target===ev.currentTarget&&onClose()},
+    h('div',{className:'modal modal-lg'},
+      h('div',{className:'modal-title'},h('span',{className:'text-gold'},'Log entry'),h('span',{style:{color:'var(--text3)',fontWeight:400,fontSize:15}},` — ${userName}`)),
+      err&&h('div',{className:'alert alert-danger'},err),
+      r2(
+        h('div',{className:'form-group'},h('label',{className:'form-label'},'Date (DD/MM/YYYY)'),h('input',{value:f.date,onChange:ev=>set('date',ev.target.value),placeholder:'DD/MM/YYYY'})),
+        h('div',{className:'form-group'},h('label',{className:'form-label'},'Month'),h('select',{value:f.month,onChange:ev=>set('month',ev.target.value)},MONTHS.map(m=>h('option',{key:m},m))))
+      ),
+      (isSdr||isAdmin)&&h('div',null,
+        h('div',{className:'form-section'},
+          h('div',{className:'form-section-title'},'📞 SDR — Outreach Activity'),
+          r3(num('sdr_dials','Dials'),num('sdr_new_leads','New Leads'),num('sdr_new_leads_contacted','Leads Contacted')),
+          r3(num('sdr_connects','Connects'),num('sdr_5min','Hit <5 mins'),num('sdr_booked_calls','Booked Calls')),
+          r2(num('sdr_scheduled','Scheduled'),num('sdr_no_shows','No Shows')),
+          num('sdr_followups','Follow Ups')
+        ),
+        h('div',{className:'form-section'},
+          h('div',{className:'form-section-title'},'💬 Top Objections'),
+          h('div',{style:{display:'flex',flexDirection:'column',gap:8}},
+            [1,2,3].map(n=>h('div',{key:n,style:{display:'flex',gap:8,alignItems:'center'}},
+              h('span',{style:{fontSize:11,color:'var(--text3)',minWidth:18,fontFamily:'monospace'}},n+'.'),
+              h('input',{value:f['obj'+n]||'',onChange:ev=>set('obj'+n,ev.target.value),placeholder:['Most common objection today','Second objection','Third objection'][n-1]})
+            ))
+          )
+        )
+      ),
+      (isCloser||isAdmin)&&h('div',null,
+        h('div',{className:'form-section'},
+          h('div',{className:'form-section-title'},'📋 Closer — Pipeline'),
+          r3(num('cs_disq','Disqualified'),num('cs_inbound','Inbound Bookings'),num('cs_total_booked','Total Booked')),
+          h('div',{className:'form-group'},
+            h('label',{className:'form-label'},'Showed Up'),
+            h('input',{type:'number',min:0,max:f.cs_total_booked||9999,value:f.cs_showed||'',onChange:ev=>set('cs_showed',parseFloat(ev.target.value)||0),style:{textAlign:'center'}}),
+            f.cs_total_booked>0&&f.cs_showed>f.cs_total_booked&&h('div',{style:{fontSize:11,color:'var(--red)',marginTop:4}},`⚠️ Cannot exceed total booked (${f.cs_total_booked})`)
+          )
+        ),
+        h('div',{className:'form-section'},
+          h('div',{className:'form-section-title'},'💰 Closer — Revenue'),
+          r3(num('cs_deposits','Deposits'),num('cs_pif','PIF Sales'),num('cs_instalment','Instalment Sales')),
+          r3(cur2('cs_cash_gen','Cash Generated'),cur2('cs_cash_coll','Cash Collected'),cur2('cs_refunded','Refunded')),
+          cur2('cs_avg_deal','Avg Deal Value')
+        ),
+        h('div',{className:'form-section'},
+          h('div',{className:'form-section-title'},'📝 Notes & Objections'),
+          h('div',{className:'form-group'},h('label',{className:'form-label'},'Main difficulties / objections'),h('input',{value:f.cs_difficulty||'',onChange:ev=>set('cs_difficulty',ev.target.value),placeholder:'What came up on calls today?'})),
+          h('div',{className:'form-group'},h('label',{className:'form-label'},'Additional notes'),h('textarea',{rows:2,value:f.cs_notes||'',onChange:ev=>set('cs_notes',ev.target.value),placeholder:'Anything else to flag?',style:{resize:'vertical'}}))
+        )
+      ),
+      h('div',{className:'modal-footer'},
+        h('button',{className:'btn-ghost',onClick:onClose},'Cancel'),
+        h('button',{className:'btn-primary',onClick:go},'Save entry')
+      )
+    )
+  );
+}
+
+// ═══════════════════════════════════════════════════════
+// REP MODAL
+// ═══════════════════════════════════════════════════════
+function RepModal({rep,clientId,onSave,onClose}){
+  const [f,setF]=useState(rep||{name:'',email:'',password:'',role:'Closer',active:true,clientId,targets:{dials:0,bookings:0,revenue:0}});
+  const [err,setErr]=useState('');
+  const set=(k,v)=>setF(p=>({...p,[k]:v}));
+  const setT=(k,v)=>setF(p=>({...p,targets:{...(p.targets||{}),[ k]:v}}));
+  const go=()=>{
+    if(!f.name.trim())return setErr('Name required');
+    if(!f.email.trim())return setErr('Email required');
+    if(!rep&&f.password.length<6)return setErr('Password min 6 characters');
+    onSave(f);
+  };
+  return h('div',{className:'modal-backdrop',onClick:ev=>ev.target===ev.currentTarget&&onClose()},
+    h('div',{className:'modal'},
+      h('div',{className:'modal-title'},rep?'Edit rep':'Add new rep'),
+      err&&h('div',{className:'alert alert-danger'},err),
+      h('div',{className:'form-section'},
+        h('div',{className:'form-section-title'},'Profile'),
+        h('div',{className:'form-row'},
+          h('div',{className:'form-group'},h('label',{className:'form-label'},'Full name'),h('input',{value:f.name,onChange:ev=>set('name',ev.target.value),placeholder:'Sarah Mitchell',autoFocus:true})),
+          h('div',{className:'form-group'},h('label',{className:'form-label'},'Role'),h('select',{value:f.role,onChange:ev=>set('role',ev.target.value)},['SDR','Closer','Admin'].map(r=>h('option',{key:r},r))))
+        ),
+        h('div',{className:'form-group'},h('label',{className:'form-label'},'Email'),h('input',{type:'email',value:f.email,onChange:ev=>set('email',ev.target.value)})),
+        h('div',{className:'form-row'},
+          h('div',{className:'form-group'},h('label',{className:'form-label'},rep?'New password (blank = keep)':'Password'),h('input',{type:'password',value:f.password||'',onChange:ev=>set('password',ev.target.value),placeholder:rep?'Leave blank to keep':'Min 6 chars'})),
+          h('div',{className:'form-group'},h('label',{className:'form-label'},'Status'),h('select',{value:f.active?'active':'inactive',onChange:ev=>set('active',ev.target.value==='active')},h('option',{value:'active'},'Active'),h('option',{value:'inactive'},'Inactive')))
+        )
+      ),
+      h('div',{className:'form-section'},
+        h('div',{className:'form-section-title'},'Monthly Targets (optional)'),
+        h('div',{className:'form-row-3'},
+          h('div',{className:'form-group'},h('label',{className:'form-label'},'Dials target'),h('input',{type:'number',min:0,value:(f.targets||{}).dials||'',onChange:ev=>setT('dials',parseFloat(ev.target.value)||0),style:{textAlign:'center'}})),
+          h('div',{className:'form-group'},h('label',{className:'form-label'},'Bookings target'),h('input',{type:'number',min:0,value:(f.targets||{}).bookings||'',onChange:ev=>setT('bookings',parseFloat(ev.target.value)||0),style:{textAlign:'center'}})),
+          h('div',{className:'form-group'},h('label',{className:'form-label'},'Revenue target'),h('input',{type:'number',min:0,value:(f.targets||{}).revenue||'',onChange:ev=>setT('revenue',parseFloat(ev.target.value)||0),style:{textAlign:'center'}}))
+        )
+      ),
+      h('div',{className:'modal-footer'},
+        h('button',{className:'btn-ghost',onClick:onClose},'Cancel'),
+        h('button',{className:'btn-primary',onClick:go},rep?'Save changes':'Add rep')
+      )
+    )
+  );
+}
+
+// ═══════════════════════════════════════════════════════
+// MY DASHBOARD (Rep view)
+// ═══════════════════════════════════════════════════════
+function MyDashboard({data,setData,user,cur}){
+  const [showEntry,setShowEntry]=useState(false);
+  const [editing,setEditing]=useState(null);
+  const [month,setMonth]=useState(nowMonth());
+  const [msg,setMsg]=useState('');
+  const myEntries=useMemo(()=>data.entries.filter(e=>e.userId===user.id&&e.month===month).sort((a,b)=>b.date.localeCompare(a.date)),[data.entries,user.id,month]);
+  const allEntries=useMemo(()=>data.entries.filter(e=>e.userId===user.id),[data.entries,user.id]);
+  const stats=useMemo(()=>calcRepStats(myEntries),[myEntries]);
+  const isSdr=user.role==='SDR';
+  const isCloser=user.role==='Closer';
+  const isAdmin=user.role==='Admin';
+  const target=user.targets||{};
+
+  // Build daily bar chart (last 14 days of entries)
+  const last14=useMemo(()=>{
+    const days=[];
+    for(let i=13;i>=0;i--){
+      const d=new Date();d.setDate(d.getDate()-i);
+      const ds=`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+      const dayEntries=allEntries.filter(e=>e.date===ds);
+      const val=isSdr?sum(dayEntries,'sdr_dials'):sum(dayEntries,'cs_showed');
+      days.push({label:String(d.getDate()),value:val,today:i===0});
+    }
+    return days;
+  },[allEntries,isSdr]);
+
+  // Objections
+  const objCount=useMemo(()=>{
+    const oc={};
+    myEntries.forEach(r=>[r.obj1,r.obj2,r.obj3,r.cs_difficulty].filter(Boolean).forEach(o=>{
+      const k=o.toLowerCase().trim();
+      oc[k]=(oc[k]||0)+1;
+    }));
+    return Object.entries(oc).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  },[myEntries]);
+
+  const saveEntry=f=>{
+    const nd={...data};
+    if(editing)nd.entries=nd.entries.map(e=>e.id===editing.id?{...f,id:editing.id,clientId:user.clientId}:e);
+    else nd.entries=[...nd.entries,{...f,id:'e_'+Date.now(),clientId:user.clientId}];
+    saveData(nd);setData(nd);setShowEntry(false);setEditing(null);
+    setMsg('Entry saved!');setTimeout(()=>setMsg(''),3000);
+  };
+  const delEntry=id=>{const nd={...data,entries:data.entries.filter(e=>e.id!==id)};saveData(nd);setData(nd);};
+
+  // Funnel data
+  const funnelData=isSdr?[
+    {label:'Dials',value:stats.dials,color:'#c4a35a'},
+    {label:'Connects',value:stats.connects,color:'#60a5fa'},
+    {label:'Booked',value:stats.booked,color:'#4ade80'},
+  ]:isCloser||isAdmin?[
+    {label:'Total Booked',value:stats.totalBooked,color:'#c4a35a'},
+    {label:'Showed',value:stats.showed,color:'#60a5fa'},
+    {label:'Closed',value:stats.sales,color:'#4ade80'},
+  ]:[];
+
+  // Target progress
+  const dialPct=target.dials>0?Math.min(100,(stats.dials/target.dials)*100):null;
+  const revPct=target.revenue>0?Math.min(100,(stats.cashGen/target.revenue)*100):null;
+
+  return h('div',{className:'page'},
+    showEntry&&h(EntryModal,{userId:user.id,userName:user.name,userRole:user.role,existing:editing,onSave:saveEntry,onClose:()=>{setShowEntry(false);setEditing(null)},cur}),
+    msg&&h('div',{className:'alert alert-success'},msg),
+
+    // Header
+    h('div',{className:'row-between page-header'},
+      h('div',null,
+        h('div',{className:'row',style:{marginBottom:6}},
+          h('div',{className:'avatar avatar-lg'},initials(user.name)),
+          h('div',null,
+            h('div',{className:'page-title'},user.name),
+            h('div',{className:'row'},rolePill(user.role),h('span',{style:{color:'var(--text3)',fontSize:12}},` · ${myEntries.length} entries in ${month}`))
+          )
+        )
+      ),
+      h('div',{className:'row'},
+        h('select',{value:month,onChange:ev=>setMonth(ev.target.value),style:{width:'auto'}},MONTHS.map(m=>h('option',{key:m},m))),
+        h('button',{className:'btn-primary',onClick:()=>{setEditing(null);setShowEntry(true)}},'+ Log today')
+      )
+    ),
+
+    // SDR Metrics
+    (isSdr||isAdmin)&&h('div',null,
+      h('div',{className:'metric-grid'},
+        h('div',{className:'metric'},
+          h('div',{className:'metric-label'},'Dials'),
+          h('div',{className:'metric-val'},stats.dials.toLocaleString()),
+          dialPct!==null&&h('div',{className:'perf-bar-row',style:{marginTop:10,marginBottom:0}},
+            h('div',{className:'perf-bar-track'},h('div',{className:'perf-bar-fill',style:{width:dialPct+'%'}})),
+            h('span',{style:{fontSize:11,color:'var(--text3)'}},Math.round(dialPct)+'% of target')
+          )
+        ),
+        h('div',{className:'metric'},
+          h('div',{className:'metric-label'},'Connect Rate'),
+          h('div',{className:'metric-val text-gold'},stats.connectRate),
+          h('div',{className:'metric-sub'},`${stats.connects} connects from ${stats.dials} dials`)
+        ),
+        h('div',{className:'metric'},
+          h('div',{className:'metric-label'},'Booked Calls'),
+          h('div',{className:'metric-val'},stats.booked.toLocaleString()),
+          h('div',{className:'metric-sub'},'Book rate: '+stats.bookRate)
+        ),
+        h('div',{className:'metric'},
+          h('div',{className:'metric-label'},'No Shows'),
+          h('div',{className:'metric-val'},stats.noShows.toLocaleString()),
+          h('div',{className:'metric-sub'},'Scheduled: '+stats.scheduled+' · Follow-ups: '+stats.followups)
+        )
+      ),
+      h('div',{className:'metric-grid metric-grid-3'},
+        h('div',{className:'metric'},h('div',{className:'metric-label'},'New Leads'),h('div',{className:'metric-val'},stats.newLeads.toLocaleString()),h('div',{className:'metric-sub'},'Contacted: '+stats.newLeadsContacted)),
+        h('div',{className:'metric'},h('div',{className:'metric-label'},'5-Min Response'),h('div',{className:'metric-val'},stats.fiveMin.toLocaleString()),h('div',{className:'metric-sub'},'vs '+stats.newLeads+' new leads')),
+        h('div',{className:'metric'},h('div',{className:'metric-label'},'Daily avg dials'),h('div',{className:'metric-val'},myEntries.length>0?Math.round(stats.dials/myEntries.length).toLocaleString():'—'),h('div',{className:'metric-sub'},myEntries.length+' days logged'))
+      )
+    ),
+
+    // Closer Metrics
+    (isCloser||isAdmin)&&h('div',null,
+      h('div',{className:'metric-grid'},
+        h('div',{className:'metric'},
+          h('div',{className:'metric-label'},'Show Rate'),
+          h('div',{className:'metric-val text-gold'},stats.showRate),
+          h('div',{className:'metric-sub'},`${stats.showed} showed / ${stats.totalBooked} booked`)
+        ),
+        h('div',{className:'metric'},
+          h('div',{className:'metric-label'},'Close Rate'),
+          h('div',{className:'metric-val text-gold'},stats.closeRate),
+          h('div',{className:'metric-sub'},stats.sales+' sales from '+stats.showed+' shows')
+        ),
+        h('div',{className:'metric'},
+          h('div',{className:'metric-label'},'Cash Generated'),
+          h('div',{className:'metric-val'},currency(cur,stats.cashGen)),
+          revPct!==null&&h('div',{className:'perf-bar-row',style:{marginTop:10,marginBottom:0}},
+            h('div',{className:'perf-bar-track'},h('div',{className:'perf-bar-fill',style:{width:revPct+'%'}})),
+            h('span',{style:{fontSize:11,color:'var(--text3)'}},Math.round(revPct)+'% of target')
+          )
+        ),
+        h('div',{className:'metric'},
+          h('div',{className:'metric-label'},'Cash Collected'),
+          h('div',{className:'metric-val'},currency(cur,stats.cashColl)),
+          h('div',{className:'metric-sub'},'Refunded: '+currency(cur,stats.refunded))
+        )
+      ),
+      h('div',{className:'metric-grid metric-grid-3'},
+        h('div',{className:'metric'},h('div',{className:'metric-label'},'PIF Sales'),h('div',{className:'metric-val'},stats.pif.toLocaleString()),h('div',{className:'metric-sub'},'Instalments: '+stats.instalment)),
+        h('div',{className:'metric'},h('div',{className:'metric-label'},'Rev / Show'),h('div',{className:'metric-val'},stats.revPerShow>0?currency(cur,stats.revPerShow):'—'),h('div',{className:'metric-sub'},'Revenue per showed call')),
+        h('div',{className:'metric'},h('div',{className:'metric-label'},'Rev / Booked'),h('div',{className:'metric-val'},stats.revPerBooked>0?currency(cur,stats.revPerBooked):'—'),h('div',{className:'metric-sub'},'Revenue per booked call'))
+      )
+    ),
+
+    // Charts row
+    myEntries.length>0&&h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:24}},
+      // Funnel
+      funnelData.some(s=>s.value>0)&&h('div',{className:'card'},
+        h('div',{style:{fontSize:12,fontWeight:700,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'.08em',marginBottom:16}},'Conversion Funnel'),
+        h('div',{style:{display:'flex',justifyContent:'center'}},
+          h(FunnelChart,{stages:funnelData})
+        )
+      ),
+      // Activity chart
+      last14.some(d=>d.value>0)&&h('div',{className:'card'},
+        h('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}},
+          h('div',{style:{fontSize:12,fontWeight:700,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'.08em'}},isSdr?'Daily Dials — Last 14 Days':'Daily Shows — Last 14 Days'),
+          h(Sparkline,{values:last14.map(d=>d.value)})
+        ),
+        h(BarChart,{data:last14,height:100}),
+        h('div',{style:{fontSize:11,color:'var(--text3)',marginTop:8,textAlign:'right'}},'Darker bar = today')
+      )
+    ),
+
+    // Gauges for rates
+    (isCloser||isAdmin)&&myEntries.length>0&&h('div',{className:'card',style:{marginBottom:24}},
+      h('div',{style:{fontSize:12,fontWeight:700,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'.08em',marginBottom:20}},'Rate Performance'),
+      h('div',{style:{display:'flex',gap:40,justifyContent:'center',flexWrap:'wrap'}},
+        h('div',{style:{textAlign:'center'}},
+          h(GaugeArc,{pct:parseFloat(stats.showRate)||0,color:'#60a5fa'}),
+          h('div',{style:{fontSize:12,color:'var(--text2)',marginTop:4}},'Show Rate'),
+          h('div',{style:{fontSize:11,color:'var(--text3)'}},'Target: 60%+')
+        ),
+        h('div',{style:{textAlign:'center'}},
+          h(GaugeArc,{pct:parseFloat(stats.closeRate)||0,color:'#4ade80'}),
+          h('div',{style:{fontSize:12,color:'var(--text2)',marginTop:4}},'Close Rate'),
+          h('div',{style:{fontSize:11,color:'var(--text3)'}},'Target: 30%+')
+        ),
+        h('div',{style:{textAlign:'center'}},
+          h(GaugeArc,{pct:stats.cashColl>0&&stats.cashGen>0?Math.min(100,(stats.cashColl/stats.cashGen)*100):0,color:'#c4a35a'}),
+          h('div',{style:{fontSize:12,color:'var(--text2)',marginTop:4}},'Collection Rate'),
+          h('div',{style:{fontSize:11,color:'var(--text3)'}},`${currency(cur,stats.cashColl)} collected`)
+        )
+      )
+    ),
+
+    // Objections
+    objCount.length>0&&h('div',{className:'card',style:{marginBottom:24}},
+      h('div',{style:{fontSize:12,fontWeight:700,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'.08em',marginBottom:18}},'Top Objections — '+month),
+      objCount.map(([obj,cnt],i)=>{
+        const maxCnt=objCount[0][1];
+        return h('div',{key:i,className:'perf-bar-row'},
+          h('span',{style:{fontSize:11,color:'var(--text3)',fontFamily:'monospace',minWidth:20}},(i+1)+'.'),
+          h('span',{style:{flex:1,fontSize:13,color:'var(--text2)'}},obj.charAt(0).toUpperCase()+obj.slice(1)),
+          h('div',{className:'perf-bar-track',style:{width:120}},h('div',{className:'perf-bar-fill',style:{width:(cnt/maxCnt*100)+'%'}})),
+          h('span',{className:'pill pill-gray',style:{marginLeft:4}},cnt+'×')
+        );
+      })
+    ),
+
+    // Entries table
+    h('div',{className:'row-between',style:{marginBottom:14}},
+      h('div',{style:{fontSize:13,fontWeight:600,color:'var(--text3)'}},'Entry log'),
+      h('span',{style:{fontSize:12,color:'var(--text3)'}},myEntries.length+' entries')
+    ),
+    myEntries.length===0
+      ?h('div',{className:'card empty'},h('div',{className:'empty-icon'},'◻'),h('div',{style:{fontWeight:600,marginBottom:4}},'No entries for '+month),h('div',{style:{fontSize:12}},'Start logging daily to track your performance'),h('button',{className:'btn-primary',style:{marginTop:20},onClick:()=>setShowEntry(true)},'Log today'))
+      :h('div',{className:'table-wrap'},
+        h('table',null,
+          h('thead',null,h('tr',null,
+            ['Date',
+              ...(isSdr||isAdmin)?['Dials','Connects','Booked','C.Rate','Top Objection']:[],
+              ...(isCloser||isAdmin)?['Booked','Showed','Show%','Sales','Close%','Cash Gen']:[],
+              ''
+            ].map(hd=>h('th',{key:hd},hd))
+          )),
+          h('tbody',null,myEntries.map(r=>{
+            const sales=(r.cs_pif||0)+(r.cs_instalment||0);
+            const sp=r.cs_total_booked>0?((r.cs_showed/r.cs_total_booked)*100).toFixed(0)+'%':null;
+            const cp=r.cs_showed>0?((sales/r.cs_showed)*100).toFixed(0)+'%':null;
+            const cr=r.sdr_dials>0?((r.sdr_connects/r.sdr_dials)*100).toFixed(0)+'%':null;
+            return h('tr',{key:r.id},
+              h('td',null,h('span',{className:'mono'},r.date)),
+              ...(isSdr||isAdmin)?[
+                h('td',null,r.sdr_dials||0),
+                h('td',null,r.sdr_connects||0),
+                h('td',null,r.sdr_booked_calls||0),
+                h('td',null,cr?ratePill(cr):'—'),
+                h('td',null,r.obj1?h('span',{style:{fontSize:12,color:'var(--text3)'}},r.obj1):'—'),
+              ]:[],
+              ...(isCloser||isAdmin)?[
+                h('td',null,r.cs_total_booked||0),
+                h('td',null,r.cs_showed||0),
+                h('td',null,sp?ratePill(sp):'—'),
+                h('td',null,sales),
+                h('td',null,cp?ratePill(cp):'—'),
+                h('td',{className:'td-name'},currency(cur,r.cs_cash_gen)),
+              ]:[],
+              h('td',null,h('div',{style:{display:'flex',gap:6}},
+                h('button',{className:'btn-ghost btn-sm',onClick:()=>{setEditing(r);setShowEntry(true)}},'Edit'),
+                h('button',{className:'btn-danger btn-sm',onClick:()=>delEntry(r.id)},'Del')
+              ))
+            );
+          }))
+        )
+      )
+  );
+}
+
+// ═══════════════════════════════════════════════════════
+// TEAM OVERVIEW (Admin view)
+// ═══════════════════════════════════════════════════════
+function TeamOverview({data,setData,clientId,cur,isSuper,readOnly}){
+  const [month,setMonth]=useState(nowMonth());
+  const [showLog,setShowLog]=useState(false);
+  const [logRep,setLogRep]=useState(null);
+  const [msg,setMsg]=useState('');
+
+  const clientUsers=useMemo(()=>data.users.filter(u=>u.clientId===clientId&&u.active),[data.users,clientId]);
+  const clientEntries=useMemo(()=>data.entries.filter(e=>e.clientId===clientId),[data.entries,clientId]);
+  const reps=clientUsers.filter(u=>u.role!=='Admin');
+  const monthEntries=clientEntries.filter(e=>e.month===month);
+
+  const teamStats=useMemo(()=>calcTeamStats(clientEntries,clientUsers,month),[clientEntries,clientUsers,month]);
+
+  // All SDR objections
+  const sdrIds=new Set(clientUsers.filter(u=>u.role==='SDR').map(u=>u.id));
+  const sdrMonthEntries=monthEntries.filter(e=>sdrIds.has(e.userId));
+  const objCount=useMemo(()=>{
+    const oc={};
+    sdrMonthEntries.forEach(r=>[r.obj1,r.obj2,r.obj3].filter(Boolean).forEach(o=>{const k=o.toLowerCase().trim();oc[k]=(oc[k]||0)+1;}));
+    return Object.entries(oc).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  },[sdrMonthEntries]);
+
+  // Leaderboard (closers by cash gen)
+  const closerIds=new Set(clientUsers.filter(u=>u.role==='Closer').map(u=>u.id));
+  const closerLb=useMemo(()=>
+    clientUsers.filter(u=>u.role==='Closer').map(u=>{
+      const e=monthEntries.filter(x=>x.userId===u.id);
+      return{...u,cashGen:sum(e,'cs_cash_gen'),sales:(sum(e,'cs_pif')+sum(e,'cs_instalment'))};
+    }).sort((a,b)=>b.cashGen-a.cashGen)
+  ,[clientUsers,monthEntries]);
+
+  const saveEntry=f=>{
+    const nd={...data,entries:[...data.entries,{...f,id:'e_'+Date.now(),clientId}]};
+    saveData(nd);setData(nd);setShowLog(false);setLogRep(null);
+    setMsg('Entry saved for '+logRep.name);setTimeout(()=>setMsg(''),3000);
+  };
+
+  return h('div',{className:'page'},
+    showLog&&logRep&&h(EntryModal,{userId:logRep.id,userName:logRep.name,userRole:logRep.role,existing:null,onSave:saveEntry,onClose:()=>{setShowLog(false);setLogRep(null)},cur}),
+    msg&&h('div',{className:'alert alert-success'},msg),
+
+    h('div',{className:'row-between page-header'},
+      h('div',null,
+        h('div',{className:'page-title'},'Team Overview'),
+        h('div',{className:'page-sub'},clientUsers.length+' active members · '+month)
+      ),
+      h('div',{className:'row'},
+        h('select',{value:month,onChange:ev=>setMonth(ev.target.value),style:{width:'auto'}},MONTHS.map(m=>h('option',{key:m},m)))
+      )
+    ),
+
+    // Team metrics (FIXED: separate SDR/Closer stats)
+    h('div',{className:'metric-grid'},
+      h('div',{className:'metric'},
+        h('div',{className:'metric-label'},'Team Revenue'),
+        h('div',{className:'metric-val text-gold'},currency(cur,teamStats.cashGen)),
+        h('div',{className:'metric-sub'},'Collected: '+currency(cur,teamStats.cashColl))
+      ),
+      h('div',{className:'metric'},
+        h('div',{className:'metric-label'},'Total Sales'),
+        h('div',{className:'metric-val'},teamStats.sales.toLocaleString()),
+        h('div',{className:'metric-sub'},teamStats.pif+' PIF · '+teamStats.instalment+' Instalments')
+      ),
+      h('div',{className:'metric'},
+        h('div',{className:'metric-label'},'Show Rate'),
+        h('div',{className:'metric-val'},teamStats.showRate),
+        h('div',{className:'metric-sub'},teamStats.showed+' of '+teamStats.csBooked+' booked calls')
+      ),
+      h('div',{className:'metric'},
+        h('div',{className:'metric-label'},'Close Rate'),
+        h('div',{className:'metric-val'},teamStats.closeRate),
+        h('div',{className:'metric-sub'},teamStats.sales+' closed from '+teamStats.showed+' shows')
+      )
+    ),
+    h('div',{className:'metric-grid metric-grid-3',style:{marginBottom:24}},
+      h('div',{className:'metric'},h('div',{className:'metric-label'},'SDR Dials'),h('div',{className:'metric-val'},teamStats.dials.toLocaleString()),h('div',{className:'metric-sub'},'Connects: '+teamStats.connects)),
+      h('div',{className:'metric'},h('div',{className:'metric-label'},'Connect Rate'),h('div',{className:'metric-val'},teamStats.connectRate),h('div',{className:'metric-sub'},'SDR connects ÷ dials')),
+      h('div',{className:'metric'},h('div',{className:'metric-label'},'Book Rate'),h('div',{className:'metric-val'},teamStats.bookRate),h('div',{className:'metric-sub'},'SDR booked ÷ dials'))
+    ),
+
+    // Rep table
+    h('div',{className:'table-wrap',style:{marginBottom:24}},
+      h('table',null,
+        h('thead',null,h('tr',null,['Rep','Role','Entries',
+          'Dials','Connects','C.Rate','Booked',
+          'CS Booked','Showed','Show%','Sales','Close%','Rev/Show','Cash Gen',
+          readOnly?null:'Action'
+        ].filter(Boolean).map(hd=>h('th',{key:hd},hd)))),
+        h('tbody',null,clientUsers.filter(u=>u.active).map(u=>{
+          const ue=monthEntries.filter(e=>e.userId===u.id);
+          const s=calcRepStats(ue);
+          const isSdr=u.role==='SDR';
+          const isCloser=u.role==='Closer';
+          return h('tr',{key:u.id},
+            h('td',null,h('div',{style:{display:'flex',alignItems:'center',gap:8}},
+              h('div',{className:'avatar',style:{width:28,height:28,fontSize:10}},initials(u.name)),
+              h('span',{className:'td-name'},u.name)
+            )),
+            h('td',null,rolePill(u.role)),
+            h('td',null,s.entries),
+            // SDR columns
+            h('td',null,isSdr?s.dials:'—'),
+            h('td',null,isSdr?s.connects:'—'),
+            h('td',null,isSdr?ratePill(s.connectRate):'—'),
+            h('td',null,isSdr?s.booked:'—'),
+            // Closer columns
+            h('td',null,isCloser?s.totalBooked:'—'),
+            h('td',null,isCloser?s.showed:'—'),
+            h('td',null,isCloser?ratePill(s.showRate):'—'),
+            h('td',null,isCloser?s.sales:'—'),
+            h('td',null,isCloser?ratePill(s.closeRate):'—'),
+            h('td',null,isCloser&&s.revPerShow>0?currency(cur,s.revPerShow):'—'),
+            h('td',{className:'td-name'},isCloser?currency(cur,s.cashGen):'—'),
+            !readOnly&&h('td',null,!isCloser?null:h('button',{className:'btn-ghost btn-sm',onClick:()=>{setLogRep(u);setShowLog(true)}},'+ Log'))
+          );
+        }))
+      )
+    ),
+
+    // Bottom row: Leaderboard + Objections
+    h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}},
+      // Closer leaderboard
+      closerLb.length>0&&h('div',{className:'card'},
+        h('div',{style:{fontSize:12,fontWeight:700,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'.08em',marginBottom:16}},'🏆 Closer Leaderboard — '+month),
+        closerLb.map((u,i)=>h('div',{key:u.id,className:'lb-row'},
+          h('div',{className:'lb-rank '+(i===0?'lb-rank-1':i===1?'lb-rank-2':i===2?'lb-rank-3':'')},i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1),
+          h('div',{className:'avatar',style:{width:28,height:28,fontSize:10}},initials(u.name)),
+          h('div',{style:{flex:1}},
+            h('div',{style:{fontSize:13,fontWeight:600,color:'var(--text)'}},u.name),
+            h('div',{style:{fontSize:11,color:'var(--text3)'}},u.sales+' sales')
+          ),
+          h('div',{style:{fontSize:15,fontWeight:700,color:'var(--gold)'}},currency(cur,u.cashGen))
+        ))
+      ),
+      // Objections
+      objCount.length>0&&h('div',{className:'card'},
+        h('div',{style:{fontSize:12,fontWeight:700,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'.08em',marginBottom:16}},'💬 Top Objections — SDR Team'),
+        objCount.map(([obj,cnt],i)=>{
+          const maxCnt=objCount[0][1];
+          return h('div',{key:i,className:'perf-bar-row'},
+            h('span',{style:{fontSize:11,color:'var(--text3)',fontFamily:'monospace',minWidth:20}},(i+1)+'.'),
+            h('span',{style:{flex:1,fontSize:13,color:'var(--text2)'}},obj.charAt(0).toUpperCase()+obj.slice(1)),
+            h('div',{className:'perf-bar-track',style:{maxWidth:100}},h('div',{className:'perf-bar-fill',style:{width:(cnt/maxCnt*100)+'%'}})),
+            h('span',{className:'pill pill-gray'},cnt+'×')
+          );
+        })
+      )
+    )
+  );
+}
+
+// ═══════════════════════════════════════════════════════
+// MANAGE TEAM (Admin)
+// ═══════════════════════════════════════════════════════
+function ManageTeam({data,setData,clientId,currentUserId}){
+  const [showModal,setShowModal]=useState(false);
+  const [editRep,setEditRep]=useState(null);
+  const [msg,setMsg]=useState('');
+
+  const clientUsers=data.users.filter(u=>u.clientId===clientId);
+
+  const handleSave=f=>{
+    const nd={...data};
+    if(editRep){
+      nd.users=nd.users.map(u=>u.id===editRep.id?{...u,...f,password:f.password||u.password}:u);
+      setMsg('Rep updated');
+    } else {
+      const existing=nd.users.find(u=>u.email.toLowerCase()===f.email.toLowerCase());
+      if(existing){setMsg('A user with this email already exists');return;}
+      nd.users=[...nd.users,{...f,id:'u_'+Date.now(),clientId,createdAt:new Date().toISOString().split('T')[0]}];
+      setMsg('Rep added');
+    }
+    saveData(nd);setData(nd);setShowModal(false);setEditRep(null);
+    setTimeout(()=>setMsg(''),4000);
+  };
+
+  return h('div',{className:'page'},
+    showModal&&h(RepModal,{rep:editRep,clientId,onSave:handleSave,onClose:()=>{setShowModal(false);setEditRep(null)}}),
+    msg&&h('div',{className:'alert alert-success'},msg),
+    h('div',{className:'row-between page-header'},
+      h('div',null,h('div',{className:'page-title'},'Manage Team'),h('div',{className:'page-sub'},clientUsers.filter(u=>u.active).length+' active · '+clientUsers.filter(u=>!u.active).length+' inactive')),
+      h('button',{className:'btn-primary',onClick:()=>{setEditRep(null);setShowModal(true)}},'+ Add rep')
+    ),
+    h('div',{className:'table-wrap'},
+      h('table',null,
+        h('thead',null,h('tr',null,['Name','Email','Role','Status','Since','Targets',''].map(hd=>h('th',{key:hd},hd)))),
+        h('tbody',null,clientUsers.map(u=>{
+          const t=u.targets||{};
+          return h('tr',{key:u.id},
+            h('td',null,h('div',{style:{display:'flex',alignItems:'center',gap:8}},h('div',{className:'avatar',style:{width:28,height:28,fontSize:10}},initials(u.name)),h('span',{className:'td-name'},u.name))),
+            h('td',null,u.email),
+            h('td',null,rolePill(u.role)),
+            h('td',null,statusPill(u.active)),
+            h('td',null,h('span',{className:'mono'},u.createdAt)),
+            h('td',null,t.revenue>0?h('span',{style:{fontSize:12,color:'var(--text3)'}},'Rev: £'+t.revenue.toLocaleString()):h('span',{style:{color:'var(--text3)'}},'—')),
+            h('td',null,h('div',{style:{display:'flex',gap:6}},
+              h('button',{className:'btn-ghost btn-sm',onClick:()=>{setEditRep(u);setShowModal(true)}},'Edit'),
+              u.id!==currentUserId&&h('button',{
+                className:'btn-ghost btn-sm',
+                style:{color:u.active?'var(--red)':'var(--green)'},
+                onClick:()=>{const nd={...data,users:data.users.map(x=>x.id===u.id?{...x,active:!x.active}:x)};saveData(nd);setData(nd);}
+              },u.active?'Deactivate':'Activate')
+            ))
+          );
+        }))
+      )
+    )
+  );
+}
+
+// ═══════════════════════════════════════════════════════
+// REP DASHBOARDS CARD GRID (Admin)
+// ═══════════════════════════════════════════════════════
+function RepDashboards({data,clientId,cur,onSelect}){
+  const month=nowMonth();
+  const reps=data.users.filter(u=>u.clientId===clientId&&u.active&&u.role!=='Admin');
+  if(reps.length===0)return h('div',{className:'page'},h('div',{className:'card empty'},h('div',{className:'empty-icon'},'👥'),h('div',{style:{fontWeight:600}},'No reps yet'),h('div',{style:{fontSize:12,marginTop:4}},'Go to "Manage Team" to add your first rep')));
+  return h('div',{className:'page'},
+    h('div',{className:'page-header'},h('div',{className:'page-title'},'Rep Dashboards'),h('div',{className:'page-sub'},'Click any rep to drill into their full performance')),
+    h('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:14}},
+      reps.map(u=>{
+        const ue=data.entries.filter(e=>e.userId===u.id&&e.month===month);
+        const s=calcRepStats(ue);
+        const isSdr=u.role==='SDR';
+        const isCloser=u.role==='Closer';
+        return h('div',{key:u.id,className:'client-card',onClick:()=>onSelect(u)},
+          h('div',{style:{display:'flex',alignItems:'center',gap:10,marginBottom:18}},
+            h('div',{className:'avatar avatar-lg'},initials(u.name)),
+            h('div',null,
+              h('div',{className:'client-name',style:{fontSize:15}},u.name),
+              h('div',null,rolePill(u.role),h('span',{style:{fontSize:11,color:'var(--text3)',marginLeft:6}},s.entries+' entries'))
+            )
+          ),
+          h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}},
+            isSdr&&[
+              h('div',{key:'d',className:'card-sm'},h('div',{className:'metric-label',style:{marginBottom:6}},'Dials'),h('div',{style:{fontSize:20,fontWeight:700,color:'var(--text)'}},s.dials.toLocaleString())),
+              h('div',{key:'cr',className:'card-sm'},h('div',{className:'metric-label',style:{marginBottom:6}},'Connect Rate'),h('div',{style:{fontSize:20,fontWeight:700,color:'var(--gold)'}},s.connectRate)),
+              h('div',{key:'bk',className:'card-sm',style:{gridColumn:'span 2'}},h('div',{className:'metric-label',style:{marginBottom:6}},'Booked'),h('div',{style:{fontSize:20,fontWeight:700,color:'var(--text)'}},s.booked.toLocaleString()))
+            ],
+            isCloser&&[
+              h('div',{key:'sr',className:'card-sm'},h('div',{className:'metric-label',style:{marginBottom:6}},'Show Rate'),h('div',{style:{fontSize:20,fontWeight:700,color:'var(--gold)'}},s.showRate)),
+              h('div',{key:'cl',className:'card-sm'},h('div',{className:'metric-label',style:{marginBottom:6}},'Close Rate'),h('div',{style:{fontSize:20,fontWeight:700,color:'var(--gold)'}},s.closeRate)),
+              h('div',{key:'cg',className:'card-sm',style:{gridColumn:'span 2'}},h('div',{className:'metric-label',style:{marginBottom:6}},'Cash Generated'),h('div',{style:{fontSize:20,fontWeight:700,color:'var(--text)'}},currency(cur,s.cashGen)))
+            ]
+          ),
+          h('div',{style:{marginTop:14,fontSize:12,color:'var(--text3)',textAlign:'right'}},'View full dashboard →')
+        );
+      })
+    )
+  );
+}
+
+// ═══════════════════════════════════════════════════════
+// CLIENT APP (Admin + Reps)
+// ═══════════════════════════════════════════════════════
+function ClientApp({user,data,setData,onLogout,superAdminBack}){
+  const [tab,setTab]=useState(user.role==='Admin'?'overview':'dashboard');
+  const [viewRep,setViewRep]=useState(null);
+  const isAdmin=user.role==='Admin';
+  const client=data.clients.find(c=>c.id===user.clientId)||{name:'Kryson',currency:'£'};
+  const cur=client.currency||'£';
+
+  const tabs=isAdmin
+    ?[{id:'overview',label:'Overview'},{id:'reps',label:'Reps'},{id:'manage',label:'Manage Team'}]
+    :[{id:'dashboard',label:'My Dashboard'}];
+
+  return h('div',null,
+    h('nav',{className:'nav'},
+      h('div',{className:'nav-logo'},
+        h('div',{className:'nav-logo-mark'},'K'),
+        h('div',null,
+          h('div',{className:'nav-logo-text'},'Kryson'),
+          h('div',{className:'nav-logo-sub'},client.name)
+        )
+      ),
+      h('div',{className:'nav-tabs'},
+        tabs.map(t=>h('button',{key:t.id,className:'nav-tab '+(tab===t.id&&!viewRep?'active':''),onClick:()=>{setTab(t.id);setViewRep(null)}},t.label))
+      ),
+      h('div',{className:'nav-right'},
+        superAdminBack&&h('button',{className:'btn-ghost btn-sm',onClick:superAdminBack},'← Super Admin'),
+        h('div',{style:{textAlign:'right'}},
+          h('div',{className:'nav-user-name'},user.name),
+          h('div',{className:'nav-user-role'},user.role)
+        ),
+        h('div',{className:'avatar'},initials(user.name)),
+        !superAdminBack&&h('button',{className:'btn-ghost btn-sm',onClick:onLogout},'Sign out')
+      )
+    ),
+    // Breadcrumb for rep drill-down
+    viewRep&&h('div',{style:{padding:'12px 28px',borderBottom:'1px solid var(--border)',display:'flex',alignItems:'center',gap:12,background:'var(--bg2)'}},
+      h('button',{className:'btn-ghost btn-sm',onClick:()=>setViewRep(null)},'← All Reps'),
+      h('div',{className:'avatar',style:{width:28,height:28,fontSize:10}},initials(viewRep.name)),
+      h('div',null,h('div',{style:{fontSize:14,fontWeight:600}},viewRep.name),h('div',{style:{fontSize:12,color:'var(--text3)'}},viewRep.role+' · '+viewRep.email))
+    ),
+    viewRep&&h(MyDashboard,{data,setData,user:{...viewRep,clientId:user.clientId},cur}),
+    !viewRep&&tab==='dashboard'&&h(MyDashboard,{data,setData,user,cur}),
+    !viewRep&&tab==='overview'&&isAdmin&&h(TeamOverview,{data,setData,clientId:user.clientId,cur,readOnly:false}),
+    !viewRep&&tab==='reps'&&isAdmin&&h(RepDashboards,{data,clientId:user.clientId,cur,onSelect:setViewRep}),
+    !viewRep&&tab==='manage'&&isAdmin&&h(ManageTeam,{data,setData,clientId:user.clientId,currentUserId:user.id})
+  );
+}
+
+// ═══════════════════════════════════════════════════════
+// CLIENT ONBOARDING MODAL (Super Admin)
+// ═══════════════════════════════════════════════════════
+function OnboardModal({onSave,onClose}){
+  const [step,setStep]=useState(1);
+  const [f,setF]=useState({
+    clientName:'',industry:'Coaching',currency:'£',targetRevenue:50000,color:'#c4a35a',
+    adminName:'',adminEmail:'',adminPassword:''
+  });
+  const [err,setErr]=useState('');
+  const set=(k,v)=>setF(p=>({...p,[k]:v}));
+
+  const next=()=>{
+    setErr('');
+    if(step===1){
+      if(!f.clientName.trim())return setErr('Company name required');
+      setStep(2);
+    } else {
+      if(!f.adminName.trim())return setErr('Admin name required');
+      if(!f.adminEmail.trim())return setErr('Admin email required');
+      if(f.adminPassword.length<6)return setErr('Password min 6 characters');
+      onSave(f);
+    }
+  };
+
+  return h('div',{className:'modal-backdrop',onClick:ev=>ev.target===ev.currentTarget&&onClose()},
+    h('div',{className:'modal'},
+      h('div',{className:'modal-title'},h('span',{className:'text-gold'},'Onboard New Client')),
+      // Wizard steps
+      h('div',{style:{display:'flex',alignItems:'center',gap:8,marginBottom:24}},
+        h('div',{className:'wizard-step '+(step>=1?step===1?'active':'done':'')},
+          h('div',{className:'wizard-step-num'},step>1?'✓':'1'),
+          h('span',null,'Company')
+        ),
+        h('div',{className:'wizard-divider'}),
+        h('div',{className:'wizard-step '+(step>=2?'active':'')},
+          h('div',{className:'wizard-step-num'},'2'),
+          h('span',null,'Admin account')
+        )
+      ),
+      err&&h('div',{className:'alert alert-danger'},err),
+
+      step===1&&h('div',null,
+        h('div',{className:'form-group'},h('label',{className:'form-label'},'Company name'),h('input',{value:f.clientName,onChange:ev=>set('clientName',ev.target.value),placeholder:'Acme Sales Co',autoFocus:true})),
+        h('div',{className:'form-row'},
+          h('div',{className:'form-group'},h('label',{className:'form-label'},'Industry'),h('select',{value:f.industry,onChange:ev=>set('industry',ev.target.value)},INDUSTRIES.map(i=>h('option',{key:i},i)))),
+          h('div',{className:'form-group'},h('label',{className:'form-label'},'Currency'),h('select',{value:f.currency,onChange:ev=>set('currency',ev.target.value)},CURRENCIES.map(c=>h('option',{key:c.sym,value:c.sym},c.label))))
+        ),
+        h('div',{className:'form-group'},h('label',{className:'form-label'},'Monthly revenue target'),h('input',{type:'number',min:0,value:f.targetRevenue||'',onChange:ev=>set('targetRevenue',parseFloat(ev.target.value)||0)})),
+        h('div',{className:'form-group'},
+          h('label',{className:'form-label'},'Accent colour'),
+          h('div',{style:{display:'flex',gap:10,marginTop:6}},
+            ['#c4a35a','#60a5fa','#4ade80','#f87171','#a78bfa','#fbbf24','#f97316'].map(col=>
+              h('div',{key:col,onClick:()=>set('color',col),style:{
+                width:28,height:28,borderRadius:6,background:col,cursor:'pointer',
+                border:f.color===col?'3px solid #fff':'2px solid transparent',
+                boxSizing:'border-box',transition:'transform .15s',transform:f.color===col?'scale(1.1)':'scale(1)'
+              }})
+            )
+          )
+        )
+      ),
+
+      step===2&&h('div',null,
+        h('div',{className:'alert alert-info'},'This creates the admin account for '+f.clientName+'. The admin can then add their team.'),
+        h('div',{className:'form-group'},h('label',{className:'form-label'},'Admin full name'),h('input',{value:f.adminName,onChange:ev=>set('adminName',ev.target.value),placeholder:'John Smith',autoFocus:true})),
+        h('div',{className:'form-group'},h('label',{className:'form-label'},'Admin email'),h('input',{type:'email',value:f.adminEmail,onChange:ev=>set('adminEmail',ev.target.value),placeholder:'admin@acme.com'})),
+        h('div',{className:'form-group'},h('label',{className:'form-label'},'Password'),h('input',{type:'password',value:f.adminPassword,onChange:ev=>set('adminPassword',ev.target.value),placeholder:'Min 6 characters'}))
+      ),
+
+      h('div',{className:'modal-footer'},
+        h('button',{className:'btn-ghost',onClick:onClose},'Cancel'),
+        step===2&&h('button',{className:'btn-ghost',onClick:()=>setStep(1)},'← Back'),
+        h('button',{className:'btn-primary',onClick:next},step===1?'Next →':'Create client')
+      )
+    )
+  );
+}
+
+// ═══════════════════════════════════════════════════════
+// SUPER ADMIN APP
+// ═══════════════════════════════════════════════════════
+function SuperAdminApp({data,setData,onLogout}){
+  const [tab,setTab]=useState('clients');
+  const [showOnboard,setShowOnboard]=useState(false);
+  const [viewClient,setViewClient]=useState(null);
+  const [viewClientAdminUser,setViewClientAdminUser]=useState(null);
+  const [msg,setMsg]=useState('');
+  const month=nowMonth();
+
+  // Aggregate stats across all clients
+  const allStats=useMemo(()=>{
+    const totalRevenue=data.entries.reduce((a,e)=>a+(e.cs_cash_gen||0),0);
+    const totalSales=data.entries.reduce((a,e)=>a+(e.cs_pif||0)+(e.cs_instalment||0),0);
+    const totalDials=data.entries.reduce((a,e)=>a+(e.sdr_dials||0),0);
+    const totalShowed=data.entries.reduce((a,e)=>a+(e.cs_showed||0),0);
+    return{totalRevenue,totalSales,totalDials,totalShowed,clients:data.clients.filter(c=>c.active).length,reps:data.users.filter(u=>u.active&&u.role!=='Admin').length};
+  },[data]);
+
+  const onboardClient=f=>{
+    const clientId='c_'+Date.now();
+    const adminId='u_'+Date.now();
+    const nd={...data,
+      clients:[...data.clients,{id:clientId,name:f.clientName,industry:f.industry,currency:f.currency,targetRevenue:f.targetRevenue,color:f.color,active:true,createdAt:new Date().toISOString().split('T')[0]}],
+      users:[...data.users,{id:adminId,clientId,name:f.adminName,email:f.adminEmail,password:f.adminPassword,role:'Admin',active:true,createdAt:new Date().toISOString().split('T')[0]}]
+    };
+    saveData(nd);setData(nd);setShowOnboard(false);
+    setMsg(`✓ ${f.clientName} onboarded successfully!`);setTimeout(()=>setMsg(''),5000);
+  };
+
+  const toggleClient=(id,active)=>{
+    const nd={...data,clients:data.clients.map(c=>c.id===id?{...c,active}:c)};
+    saveData(nd);setData(nd);
+  };
+
+  // If viewing a client's admin panel
+  if(viewClient&&viewClientAdminUser){
+    return h(ClientApp,{
+      user:viewClientAdminUser,
+      data,setData,
+      onLogout:()=>{},
+      superAdminBack:()=>{setViewClient(null);setViewClientAdminUser(null);}
+    });
+  }
+
+  return h('div',null,
+    h('nav',{className:'nav'},
+      h('div',{className:'nav-logo'},
+        h('div',{className:'nav-logo-mark'},'K'),
+        h('div',null,
+          h('div',{className:'nav-logo-text'},'Kryson'),
+          h('div',{className:'nav-logo-sub'},'Super Admin')
+        )
+      ),
+      h('div',{className:'nav-tabs'},
+        [{id:'clients',label:'Clients'},{id:'settings',label:'Settings'}].map(t=>
+          h('button',{key:t.id,className:'nav-tab '+(tab===t.id?'active-gold':''),onClick:()=>setTab(t.id)},t.label)
+        )
+      ),
+      h('div',{className:'nav-right'},
+        h('div',{style:{textAlign:'right'}},
+          h('div',{className:'nav-user-name'},'Kyle Read'),
+          h('div',{className:'nav-user-role',style:{color:'var(--gold)'}},'Super Admin')
+        ),
+        h('div',{className:'avatar',style:{background:'var(--gold-bg)',borderColor:'var(--gold-border)',color:'var(--gold)'}},'KR'),
+        h('button',{className:'btn-ghost btn-sm',onClick:onLogout},'Sign out')
+      )
+    ),
+
+    h('div',{className:'page'},
+      showOnboard&&h(OnboardModal,{onSave:onboardClient,onClose:()=>setShowOnboard(false)}),
+      msg&&h('div',{className:'alert alert-success'},msg),
+
+      tab==='clients'&&h('div',null,
+        // Super admin aggregate metrics
+        h('div',{className:'row-between page-header'},
+          h('div',null,
+            h('div',{className:'page-title'},'All Clients'),
+            h('div',{className:'page-sub'},'Your complete portfolio — all-time metrics')
+          ),
+          h('button',{className:'btn-primary',onClick:()=>setShowOnboard(true)},'+ Onboard Client')
+        ),
+
+        h('div',{className:'metric-grid'},
+          h('div',{className:'metric'},h('div',{className:'metric-label'},'Active Clients'),h('div',{className:'metric-val text-gold'},allStats.clients),h('div',{className:'metric-sub'},'Managed by Kryson')),
+          h('div',{className:'metric'},h('div',{className:'metric-label'},'Total Revenue'),h('div',{className:'metric-val text-gold'},'£'+Math.round(allStats.totalRevenue).toLocaleString()),h('div',{className:'metric-sub'},'All clients combined')),
+          h('div',{className:'metric'},h('div',{className:'metric-label'},'Total Sales'),h('div',{className:'metric-val'},allStats.totalSales.toLocaleString()),h('div',{className:'metric-sub'},'PIF + Instalments')),
+          h('div',{className:'metric'},h('div',{className:'metric-label'},'Active Reps'),h('div',{className:'metric-val'},allStats.reps),h('div',{className:'metric-sub'},allStats.clients+' client teams'))
+        ),
+
+        // Client cards grid
+        data.clients.length===0
+          ?h('div',{className:'card empty'},h('div',{className:'empty-icon'},'🏢'),h('div',{style:{fontWeight:600,marginBottom:6}},'No clients yet'),h('div',{style:{fontSize:13,marginBottom:20}},'Onboard your first client to get started'),h('button',{className:'btn-primary',onClick:()=>setShowOnboard(true)},'+ Onboard First Client'))
+          :h('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))',gap:16}},
+            data.clients.map(client=>{
+              const cEntries=data.entries.filter(e=>e.clientId===client.id);
+              const cUsers=data.users.filter(u=>u.clientId===client.id&&u.active);
+              const mEntries=cEntries.filter(e=>e.month===month);
+              const revenue=sum(mEntries,'cs_cash_gen');
+              const sales=(sum(mEntries,'cs_pif')+sum(mEntries,'cs_instalment'));
+              const showed=sum(mEntries,'cs_showed');
+              const booked=sum(mEntries,'cs_total_booked');
+              const adminUser=data.users.find(u=>u.clientId===client.id&&u.role==='Admin');
+
+              return h('div',{key:client.id,className:'client-card'},
+                h('div',{style:{position:'absolute',top:0,left:0,right:0,height:3,background:client.color||'#c4a35a',borderRadius:'14px 14px 0 0'}}),
+                h('div',{style:{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:14}},
+                  h('div',null,
+                    h('div',{className:'client-name'},client.name),
+                    h('div',{className:'client-meta'},client.industry+' · '+client.currency)
+                  ),
+                  h('div',{style:{display:'flex',gap:6,alignItems:'center'}},
+                    statusPill(client.active),
+                    h('button',{className:'btn-ghost btn-sm',onClick:()=>{setViewClient(client);setViewClientAdminUser(adminUser);}},'View →')
+                  )
+                ),
+                h('div',{style:{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8,marginBottom:16}},
+                  h('div',{className:'client-stat'},h('div',{className:'client-stat-val',style:{color:client.color||'#c4a35a'}},client.currency+Math.round(revenue).toLocaleString()),h('div',{className:'client-stat-label'},'Revenue')),
+                  h('div',{className:'client-stat'},h('div',{className:'client-stat-val'},sales),h('div',{className:'client-stat-label'},'Sales')),
+                  h('div',{className:'client-stat'},h('div',{className:'client-stat-val'},cUsers.filter(u=>u.role!=='Admin').length),h('div',{className:'client-stat-label'},'Reps'))
+                ),
+                h('div',{style:{borderTop:'1px solid var(--border)',paddingTop:12,display:'flex',justifyContent:'space-between',alignItems:'center'}},
+                  h('div',null,
+                    h('div',{style:{fontSize:11,color:'var(--text3)'}},showed>0?'Show rate: '+pct(showed,booked)+' · Close rate: '+pct(sales,showed):'No data this month'),
+                    h('div',{style:{fontSize:11,color:'var(--text3)',marginTop:2}},'Since '+client.createdAt)
+                  ),
+                  h('button',{
+                    className:'btn-ghost btn-sm',
+                    style:{color:client.active?'var(--red)':'var(--green)',fontSize:11},
+                    onClick:()=>toggleClient(client.id,!client.active)
+                  },client.active?'Deactivate':'Activate')
+                )
+              );
+            })
+          )
+      ),
+
+      tab==='settings'&&h('div',null,
+        h('div',{className:'page-header'},h('div',{className:'page-title'},'Settings'),h('div',{className:'page-sub'},'Super admin configuration')),
+        h('div',{className:'card',style:{maxWidth:480}},
+          h('div',{className:'divider'}),
+          h('div',{style:{fontWeight:600,marginBottom:12}},'Data'),
+          h('div',{style:{fontSize:13,color:'var(--text3)',marginBottom:12}},'All client data is stored locally in your browser. Export regularly if needed.'),
+          h('button',{className:'btn-ghost',onClick:()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='kryson_data_'+new Date().toISOString().split('T')[0]+'.json';a.click();}},'⬇ Export all data as JSON'),
+          h('div',{style:{marginTop:12}}),
+          h('button',{className:'btn-danger',style:{fontSize:12},onClick:()=>{if(confirm('Import data from a JSON file? This will REPLACE all current data.')){const inp=document.createElement('input');inp.type='file';inp.accept='.json';inp.onchange=ev=>{const r=new FileReader();r.onload=re=>{try{const nd=JSON.parse(re.result);saveData(nd);setData(nd);alert('Data imported!');}catch(_){alert('Invalid JSON file');}};r.readAsText(ev.target.files[0])};inp.click();}}},'⬆ Import data from JSON')
+        )
+      )
+    )
+  );
+}
+
+// ═══════════════════════════════════════════════════════
+// LOGIN
+// ═══════════════════════════════════════════════════════
+function Login({onLogin}){
+  const [email,setEmail]=useState('');
+  const [pass,setPass]=useState('');
+  const [err,setErr]=useState('');
+  const [loading,setLoading]=useState(false);
+
+  const go=()=>{
+    setErr('');setLoading(true);
+    setTimeout(()=>{
+      setLoading(false);
+      // Super admin check
+      if(email.trim().toLowerCase()===SUPER_ADMIN_EMAIL.toLowerCase()&&pass===SUPER_ADMIN_PASS){
+        onLogin({role:'SuperAdmin',name:'Kyle Read',email:email.trim()});
+        return;
+      }
+      const d=loadData();
+      const user=d.users.find(u=>u.email.toLowerCase()===email.trim().toLowerCase()&&u.password===pass&&u.active);
+      if(user){
+        const client=d.clients.find(c=>c.id===user.clientId);
+        if(client&&!client.active){setErr('This account has been deactivated. Contact support.');return;}
+        onLogin(user,d);
+      } else {
+        setErr('Invalid email or password. Please try again.');
+      }
+    },300);
+  };
+
+  return h('div',{className:'login-wrap'},
+    h('div',{className:'login-box'},
+      h('div',{className:'login-logo-wrap'},
+        h('div',{className:'login-logo-mark'},'K'),
+        h('div',{className:'login-logo-name'},'Kryson'),
+        h('div',{className:'login-logo-sub'},'Sales Performance System')
+      ),
+      h('div',{className:'card'},
+        err&&h('div',{className:'alert alert-danger'},err),
+        h('div',{className:'form-group'},
+          h('label',{className:'form-label'},'Email address'),
+          h('input',{type:'email',value:email,onChange:ev=>setEmail(ev.target.value),onKeyDown:ev=>ev.key==='Enter'&&go(),placeholder:'you@company.com',autoFocus:true})
+        ),
+        h('div',{className:'form-group',style:{marginBottom:22}},
+          h('label',{className:'form-label'},'Password'),
+          h('input',{type:'password',value:pass,onChange:ev=>setPass(ev.target.value),onKeyDown:ev=>ev.key==='Enter'&&go(),placeholder:'••••••••'})
+        ),
+        h('button',{className:'btn-primary',onClick:go,disabled:loading,style:{width:'100%',padding:'12px',opacity:loading?.7:1}},loading?'Signing in…':'Sign in')
+      )
+    )
+  );
+}
+
+// ═══════════════════════════════════════════════════════
+// ROOT APP
+// ═══════════════════════════════════════════════════════
+function App(){
+  const [user,setUser]=useState(null);
+  const [data,setDataRaw]=useState(loadData);
+  const setData=useCallback(d=>{setDataRaw(d);saveData(d);},[]);
+
+  const handleLogin=(u,d)=>{
+    setUser(u);
+    if(d)setDataRaw(d);
+  };
+  const handleLogout=()=>setUser(null);
+
+  if(!user)return h(Login,{onLogin:handleLogin});
+
+  if(user.role==='SuperAdmin'){
+    return h(SuperAdminApp,{data,setData,onLogout:handleLogout});
+  }
+  return h(ClientApp,{user,data,setData,onLogout:handleLogout});
+}
+
+ReactDOM.createRoot(document.getElementById('app')).render(h(App));
+</script>
+</body>
+</html>
