@@ -727,7 +727,7 @@ function MyDashboard({data,setData,user,cur}){
   const revPct=target.revenue>0?Math.min(100,(stats.cashGen/target.revenue)*100):null;
 
   return h('div',{className:'page'},
-    confirmDelEntry\!==null&&h(ConfirmModal,{title:'Delete this entry?',body:'This will permanently remove the entry and cannot be undone.',confirmLabel:'Delete entry',onConfirm:()=>{const nd={...data,entries:data.entries.filter(e=>e.id\!==confirmDelEntry)};setData(nd);setConfirmDelEntry(null);},onClose:()=>setConfirmDelEntry(null)}),
+    confirmDelEntry!==null&&h(ConfirmModal,{title:'Delete this entry?',body:'This will permanently remove the entry and cannot be undone.',confirmLabel:'Delete entry',onConfirm:()=>{const nd={...data,entries:data.entries.filter(e=>e.id!==confirmDelEntry)};setData(nd);setConfirmDelEntry(null);},onClose:()=>setConfirmDelEntry(null)}),
     showEntry&&h(EntryModal,{userId:user.id,userName:user.name,userRole:user.role,existing:editing,onSave:saveEntry,onClose:()=>{setShowEntry(false);setEditing(null)},cur}),
 
     // Header
@@ -995,7 +995,7 @@ function TeamOverview({data,setData,clientId,cur,isSuper,readOnly}){
         h('div',{className:'metric-label'},'Team Revenue'),
         h('div',{className:'metric-val text-gold'},currency(cur,teamStats.cashGen)),
         h('div',{className:'metric-sub'},'Collected: '+currency(cur,teamStats.cashColl)),
-        (()=>{const prevE=clientEntries.filter(e=>e.month===MONTHS[(new Date().getMonth()+11)%12]);const prevRev=prevE.reduce((a,x)=>a+(x.cs_cash_gen||0),0);const m=prevRev>0?((teamStats.cashGen-prevRev)/prevRev*100).toFixed(1):null;return m\!==null&&h('div',{className:'metric-trend '+(+m>=0?'trend-up':'trend-dn')},(+m>=0?'↑':'↓')+Math.abs(m)+'% vs '+MONTHS[(new Date().getMonth()+11)%12]);})()
+        (()=>{const prevE=clientEntries.filter(e=>e.month===MONTHS[(new Date().getMonth()+11)%12]);const prevRev=prevE.reduce((a,x)=>a+(x.cs_cash_gen||0),0);const m=prevRev>0?((teamStats.cashGen-prevRev)/prevRev*100).toFixed(1):null;return m!==null&&h('div',{className:'metric-trend '+(+m>=0?'trend-up':'trend-dn')},(+m>=0?'↑':'↓')+Math.abs(m)+'% vs '+MONTHS[(new Date().getMonth()+11)%12]);})()
       ),
       h('div',{className:'metric'},
         h('div',{className:'metric-label'},'Total Sales'),
@@ -1154,7 +1154,7 @@ function ManageTeam({data,setData,clientId,currentUserId}){
   const [confirmDel,setConfirmDel]=useState(null);
   const [repSearch,setRepSearch]=useState('');
   return h('div',{className:'page'},
-    confirmDel&&h(ConfirmModal,{title:'Delete '+confirmDel.name+'?',body:'This permanently removes their account and all their logged entries. Cannot be undone.',confirmLabel:'Delete permanently',onConfirm:()=>{const nd={...data,users:data.users.filter(x=>x.id\!==confirmDel.id),entries:data.entries.filter(e=>e.userId\!==confirmDel.id)};setData(nd);toast(confirmDel.name+' deleted.');},onClose:()=>setConfirmDel(null)}),
+    confirmDel&&h(ConfirmModal,{title:'Delete '+confirmDel.name+'?',body:'This permanently removes their account and all their logged entries. Cannot be undone.',confirmLabel:'Delete permanently',onConfirm:()=>{const nd={...data,users:data.users.filter(x=>x.id!==confirmDel.id),entries:data.entries.filter(e=>e.userId!==confirmDel.id)};setData(nd);toast(confirmDel.name+' deleted.');},onClose:()=>setConfirmDel(null)}),
     showModal&&h(RepModal,{rep:editRep,clientId,onSave:handleSave,onClose:()=>{setShowModal(false);setEditRep(null)}}),
     h('div',{className:'row-between page-header'},
       h('div',null,h('div',{className:'page-title'},'Manage Team'),h('div',{className:'page-sub'},clientUsers.filter(u=>u.active).length+' active · '+clientUsers.filter(u=>!u.active).length+' inactive')),
@@ -1166,7 +1166,7 @@ function ManageTeam({data,setData,clientId,currentUserId}){
     h('div',{className:'table-wrap'},
       h('table',null,
         h('thead',null,h('tr',null,['Name','Email','Role','Status','Since','Targets',''].map(hd=>h('th',{key:hd},hd)))),
-        h('tbody',null,clientUsers.filter(u=>\!repSearch||u.name.toLowerCase().includes(repSearch.toLowerCase())||u.email.toLowerCase().includes(repSearch.toLowerCase())||u.role.toLowerCase().includes(repSearch.toLowerCase())).map(u=>{
+        h('tbody',null,clientUsers.filter(u=>!repSearch||u.name.toLowerCase().includes(repSearch.toLowerCase())||u.email.toLowerCase().includes(repSearch.toLowerCase())||u.role.toLowerCase().includes(repSearch.toLowerCase())).map(u=>{
           const t=u.targets||{};
           return h('tr',{key:u.id},
             h('td',null,h('div',{style:{display:'flex',alignItems:'center',gap:8}},h('div',{className:'avatar',style:{width:28,height:28,fontSize:10}},initials(u.name)),h('span',{className:'td-name'},u.name))),
@@ -1513,7 +1513,7 @@ function SuperAdminApp({data,setData,onLogout}){
     ),
 
     h('div',{className:'page'},
-      confirmDelClient&&h(ConfirmModal,{title:'Delete "'+confirmDelClient.name+'"?',body:'This permanently removes the client, all their users, and all data entries. Cannot be undone.',confirmLabel:'Delete permanently',onConfirm:()=>{const nd={...data,clients:data.clients.filter(c=>c.id\!==confirmDelClient.id),users:data.users.filter(u=>u.clientId\!==confirmDelClient.id),entries:data.entries.filter(e=>e.clientId\!==confirmDelClient.id)};setData(nd);toast(confirmDelClient.name+' deleted permanently.');setConfirmDelClient(null);},onClose:()=>setConfirmDelClient(null)}),
+      confirmDelClient&&h(ConfirmModal,{title:'Delete "'+confirmDelClient.name+'"?',body:'This permanently removes the client, all their users, and all data entries. Cannot be undone.',confirmLabel:'Delete permanently',onConfirm:()=>{const nd={...data,clients:data.clients.filter(c=>c.id!==confirmDelClient.id),users:data.users.filter(u=>u.clientId!==confirmDelClient.id),entries:data.entries.filter(e=>e.clientId!==confirmDelClient.id)};setData(nd);toast(confirmDelClient.name+' deleted permanently.');setConfirmDelClient(null);},onClose:()=>setConfirmDelClient(null)}),
       showOnboard&&h(OnboardModal,{onSave:onboardClient,onClose:()=>setShowOnboard(false)}),
   
       tab==='clients'&&h('div',null,
@@ -1528,13 +1528,14 @@ function SuperAdminApp({data,setData,onLogout}){
 
         h('div',{className:'metric-grid'},
           h('div',{className:'metric'},h('div',{className:'metric-label'},'Active Clients'),h('div',{className:'metric-val text-gold'},allStats.clients),h('div',{className:'metric-sub'},'Managed by Kryson')),
-          h('div',{className:'metric'},h('div',{className:'metric-label'},'Total Revenue'),h('div',{className:'metric-val text-gold'},'£'+Math.round(allStats.totalRevenue).toLocaleString()),h('div',{className:'metric-sub'},'All clients combined'),(()=>{const m=momPct(allStats.totalRevenue,allStatsPrev.totalRevenue);return m\!==null&&h('div',{className:'metric-trend '+(+m>=0?'trend-up':'trend-dn')},(+m>=0?'↑':'↓')+Math.abs(m)+'% vs '+prevMonthName);})()),
-          h('div',{className:'metric'},h('div',{className:'metric-label'},'Total Sales'),h('div',{className:'metric-val'},allStats.totalSales.toLocaleString()),h('div',{className:'metric-sub'},'PIF + Instalments'),(()=>{const m=momPct(allStats.totalSales,allStatsPrev.totalSales);return m\!==null&&h('div',{className:'metric-trend '+(+m>=0?'trend-up':'trend-dn')},(+m>=0?'↑':'↓')+Math.abs(m)+'% vs '+prevMonthName);})()),
+          h('div',{className:'metric'},h('div',{className:'metric-label'},'Total Revenue'),h('div',{className:'metric-val text-gold'},'£'+Math.round(allStats.totalRevenue).toLocaleString()),h('div',{className:'metric-sub'},'All clients combined'),(()=>{const m=momPct(allStats.totalRevenue,allStatsPrev.totalRevenue);return m!==null&&h('div',{className:'metric-trend '+(+m>=0?'trend-up':'trend-dn')},(+m>=0?'↑':'↓')+Math.abs(m)+'% vs '+prevMonthName);})()),
+          h('div',{className:'metric'},h('div',{className:'metric-label'},'Total Sales'),h('div',{className:'metric-val'},allStats.totalSales.toLocaleString()),h('div',{className:'metric-sub'},'PIF + Instalments'),(()=>{const m=momPct(allStats.totalSales,allStatsPrev.totalSales);return m!==null&&h('div',{className:'metric-trend '+(+m>=0?'trend-up':'trend-dn')},(+m>=0?'↑':'↓')+Math.abs(m)+'% vs '+prevMonthName);})()),
           h('div',{className:'metric'},h('div',{className:'metric-label'},'Active Reps'),h('div',{className:'metric-val'},allStats.reps),h('div',{className:'metric-sub'},allStats.clients+' client teams'))
         ),
 
         // Client cards grid
-        data.clients.length===0
+        (()=>{const filteredClients=data.clients.filter(c=>!clientSearch||c.name.toLowerCase().includes(clientSearch.toLowerCase()));return filteredClients.length===0
+          ?h('div',{className:'card empty'},h('div',{className:'empty-icon'},'🏢'),h('div',{style:{fontWeight:600,marginBottom:6}},clientSearch?'No clients match "'+clientSearch+'"':'No clients yet'),h('div',{style:{fontSize:13,marginBottom:20}},clientSearch?'Try a different search term':'Onboard your first client to get started'),!clientSearch&&h('button',{className:'btn-primary',onClick:()=>setShowOnboard(true)},'+ Onboard First Client'))
           :h('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))',gap:16}},
             filteredClients.map(client=>{
               const cEntries=data.entries.filter(e=>e.clientId===client.id);
@@ -1762,7 +1763,7 @@ function Login({onLogin,data}){
 // ═══════════════════════════════════════════════════════
 
 function LineChart({series,height=160,showDots=true}){
-  if(\!series||\!series.length)return null;
+  if(!series||!series.length)return null;
   const W=500,H=height,padL=38,padR=12,padT=10,padB=28;
   const innerW=W-padL-padR,innerH=H-padT-padB;
   const allY=series.flatMap(s=>s.data.map(d=>d.y));
@@ -1779,7 +1780,7 @@ function LineChart({series,height=160,showDots=true}){
     )),
     allX.map((lbl,i)=>i%Math.max(1,Math.floor(allX.length/8))===0&&h('text',{key:i,x:padL+xScale(i),y:H-4,textAnchor:'middle',fill:'#5a5866',fontSize:9,fontFamily:'Inter,sans-serif'},lbl)),
     series.map((s,si)=>{
-      if(\!s.data||\!s.data.length)return null;
+      if(!s.data||!s.data.length)return null;
       const pts=s.data.map((d,i)=>`${padL+xScale(i)},${padT+yScale(d.y)}`).join(' ');
       const areaBottom=padT+innerH;
       const firstX=padL+xScale(0),lastX=padL+xScale(s.data.length-1);
@@ -1812,7 +1813,7 @@ function ConfirmModal({title,body,confirmLabel,onConfirm,onClose}){
 }
 
 let _toastSetFn=null;
-function toast(msg,type){type=type||'success';if(_toastSetFn){const id=Date.now();_toastSetFn(function(t){return[...t,{id,msg,type}];});setTimeout(function(){_toastSetFn(function(t){return t.filter(function(x){return x.id\!==id;});});},3200);}}
+function toast(msg,type){type=type||'success';if(_toastSetFn){const id=Date.now();_toastSetFn(function(t){return[...t,{id,msg,type}];});setTimeout(function(){_toastSetFn(function(t){return t.filter(function(x){return x.id!==id;});});},3200);}}
 function ToastLayer(){const[toasts,setToasts]=useState([]);useEffect(function(){_toastSetFn=setToasts;return function(){_toastSetFn=null;};},[]);return h('div',{className:'toast-wrap'},toasts.map(function(t){return h('div',{key:t.id,className:'toast toast-'+t.type},t.msg);}));}
 
 function App(){
