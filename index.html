@@ -215,6 +215,15 @@ tr:hover td{background:rgba(255,255,255,.015)}
 
 @media(max-width:900px){.metric-grid{grid-template-columns:repeat(2,1fr)}.form-row{grid-template-columns:1fr}}
 @media(max-width:600px){.metric-grid{grid-template-columns:1fr}.page{padding:16px}}
+
+@keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.toast-wrap{position:fixed;top:16px;right:16px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{padding:12px 18px;border-radius:9px;font-size:13px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.5);animation:toastIn .2s ease;pointer-events:none;min-width:220px}
+.toast-success{background:#1a2e1a;color:var(--green);border:1px solid var(--green-border)}
+.toast-error{background:#2e1a1a;color:var(--red);border:1px solid var(--red-border)}
+.toast-info{background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-border)}
+.chart-title{font-size:13px;font-weight:600;color:var(--text2);margin-bottom:16px}
+.chart-subtitle{font-size:11px;color:var(--text3);margin-top:-10px;margin-bottom:14px}
 </style>
 </head>
 <body>
@@ -451,18 +460,19 @@ function BarChart({data,color,currency:cur,height=120}){
   );
 }
 
-function GaugeArc({pct:p,color,size=80}){
-  const r=30,cx=size/2,cy=size/2+6;
+function GaugeArc({pct:p,color,size=100}){
+  const r=36,cx=size/2,cy=size*0.55;
   const angle=Math.min(p/100,1)*Math.PI;
   const sx=cx-r,sy=cy;
   const ex=cx-r*Math.cos(angle),ey=cy-r*Math.sin(angle);
   const lg=angle>Math.PI/2?1:0;
   const bg=`M ${sx} ${sy} A ${r} ${r} 0 0 1 ${cx+r} ${cy}`;
   const fg=`M ${sx} ${sy} A ${r} ${r} 0 ${lg} 1 ${ex} ${ey}`;
-  return h('svg',{width:size,height:size/2+10,viewBox:`0 0 ${size} ${size/2+10}`},
-    h('path',{d:bg,fill:'none',stroke:'#222229',strokeWidth:6,strokeLinecap:'round'}),
-    h('path',{d:fg,fill:'none',stroke:color||'#c4a35a',strokeWidth:6,strokeLinecap:'round'}),
-    h('text',{x:cx,y:cy+2,textAnchor:'middle',fill:'#f0eee8',fontSize:11,fontWeight:700,fontFamily:'Inter,sans-serif'},
+  const svgH=size*0.6+4;
+  return h('svg',{width:size,height:svgH,viewBox:`0 0 ${size} ${svgH}`},
+    h('path',{d:bg,fill:'none',stroke:'#222229',strokeWidth:8,strokeLinecap:'round'}),
+    h('path',{d:fg,fill:'none',stroke:color||'#c4a35a',strokeWidth:8,strokeLinecap:'round'}),
+    h('text',{x:cx,y:cy+4,textAnchor:'middle',fill:'#f0eee8',fontSize:14,fontWeight:700,fontFamily:'Inter,sans-serif'},
       Math.min(Math.round(p),999)+'%')
   );
 }
@@ -513,14 +523,14 @@ function EntryModal({userId,userName,userRole,existing,onSave,onClose,cur}){
   const set=(k,v)=>setF(p=>({...p,[k]:v}));
   const num=(k,lbl,min=0,max=9999)=>h('div',{className:'form-group'},
     h('label',{className:'form-label'},lbl),
-    h('input',{type:'number',min,max,value:f[k]||'',
-      onChange:ev=>set(k,parseFloat(ev.target.value)||0),
+    h('input',{type:'number',min,max,value:f[k]??'',
+      onChange:ev=>set(k,ev.target.value===''?0:parseFloat(ev.target.value)||0),
       style:{textAlign:'center'}})
   );
   const cur2=(k,lbl)=>h('div',{className:'form-group'},
     h('label',{className:'form-label'},lbl+' ('+cur+')'),
-    h('input',{type:'number',min:0,step:0.01,value:f[k]||'',
-      onChange:ev=>set(k,parseFloat(ev.target.value)||0),
+    h('input',{type:'number',min:0,step:0.01,value:f[k]??'',
+      onChange:ev=>set(k,ev.target.value===''?0:parseFloat(ev.target.value)||0),
       style:{textAlign:'center'}})
   );
   const isSdr=userRole==='SDR';
@@ -573,7 +583,7 @@ function EntryModal({userId,userName,userRole,existing,onSave,onClose,cur}){
           r3(num('cs_disq','Disqualified'),num('cs_inbound','Inbound Bookings'),num('cs_total_booked','Total Booked')),
           h('div',{className:'form-group'},
             h('label',{className:'form-label'},'Showed Up'),
-            h('input',{type:'number',min:0,max:f.cs_total_booked||9999,value:f.cs_showed||'',onChange:ev=>set('cs_showed',parseFloat(ev.target.value)||0),style:{textAlign:'center'}}),
+            h('input',{type:'number',min:0,max:f.cs_total_booked||9999,value:f.cs_showed??'',onChange:ev=>set('cs_showed',ev.target.value===''?0:parseFloat(ev.target.value)||0),style:{textAlign:'center'}}),
             f.cs_total_booked>0&&f.cs_showed>f.cs_total_booked&&h('div',{style:{fontSize:11,color:'var(--red)',marginTop:4}},`⚠️ Cannot exceed total booked (${f.cs_total_booked})`)
           )
         ),
@@ -630,9 +640,9 @@ function RepModal({rep,clientId,onSave,onClose}){
       h('div',{className:'form-section'},
         h('div',{className:'form-section-title'},'Monthly Targets (optional)'),
         h('div',{className:'form-row-3'},
-          h('div',{className:'form-group'},h('label',{className:'form-label'},'Dials target'),h('input',{type:'number',min:0,value:(f.targets||{}).dials||'',onChange:ev=>setT('dials',parseFloat(ev.target.value)||0),style:{textAlign:'center'}})),
-          h('div',{className:'form-group'},h('label',{className:'form-label'},'Bookings target'),h('input',{type:'number',min:0,value:(f.targets||{}).bookings||'',onChange:ev=>setT('bookings',parseFloat(ev.target.value)||0),style:{textAlign:'center'}})),
-          h('div',{className:'form-group'},h('label',{className:'form-label'},'Revenue target'),h('input',{type:'number',min:0,value:(f.targets||{}).revenue||'',onChange:ev=>setT('revenue',parseFloat(ev.target.value)||0),style:{textAlign:'center'}}))
+          h('div',{className:'form-group'},h('label',{className:'form-label'},'Dials target'),h('input',{type:'number',min:0,value:(f.targets||{}).dials??'',onChange:ev=>setT('dials',ev.target.value===''?0:parseFloat(ev.target.value)||0),style:{textAlign:'center'}})),
+          h('div',{className:'form-group'},h('label',{className:'form-label'},'Bookings target'),h('input',{type:'number',min:0,value:(f.targets||{}).bookings??'',onChange:ev=>setT('bookings',ev.target.value===''?0:parseFloat(ev.target.value)||0),style:{textAlign:'center'}})),
+          h('div',{className:'form-group'},h('label',{className:'form-label'},'Revenue target'),h('input',{type:'number',min:0,value:(f.targets||{}).revenue??'',onChange:ev=>setT('revenue',ev.target.value===''?0:parseFloat(ev.target.value)||0),style:{textAlign:'center'}}))
         )
       ),
       h('div',{className:'modal-footer'},
@@ -650,7 +660,7 @@ function MyDashboard({data,setData,user,cur}){
   const [showEntry,setShowEntry]=useState(false);
   const [editing,setEditing]=useState(null);
   const [timeline,setTimeline]=useState(getDefaultTimeline());
-  const [msg,setMsg]=useState('');
+  const [confirmDelEntry,setConfirmDelEntry]=useState(null);
   const myEntries=useMemo(()=>filterByTimeline(data.entries.filter(e=>e.userId===user.id),timeline).sort((a,b)=>b.date.localeCompare(a.date)),[data.entries,user.id,timeline]);
   const allEntries=useMemo(()=>data.entries.filter(e=>e.userId===user.id),[data.entries,user.id]);
   const stats=useMemo(()=>calcRepStats(myEntries),[myEntries]);
@@ -670,6 +680,16 @@ function MyDashboard({data,setData,user,cur}){
       days.push({label:String(d.getDate()),value:val,today:i===0});
     }
     return days;
+  },[allEntries,isSdr]);
+
+  const last8WeeksRep=useMemo(()=>{
+    return Array.from({length:8},(_,i)=>{
+      const wStart=new Date();wStart.setDate(wStart.getDate()-7*(7-i));
+      const wEnd=new Date(wStart);wEnd.setDate(wStart.getDate()+6);
+      const wE=allEntries.filter(e=>{const d=parseEntryDate(e.date);return d>=wStart&&d<=wEnd;});
+      const label='W'+(i+1);
+      return{label,val:isSdr?sum(wE,'sdr_dials'):sum(wE,'cs_cash_gen')};
+    });
   },[allEntries,isSdr]);
 
   // Objections
@@ -707,8 +727,8 @@ function MyDashboard({data,setData,user,cur}){
   const revPct=target.revenue>0?Math.min(100,(stats.cashGen/target.revenue)*100):null;
 
   return h('div',{className:'page'},
+    confirmDelEntry\!==null&&h(ConfirmModal,{title:'Delete this entry?',body:'This will permanently remove the entry and cannot be undone.',confirmLabel:'Delete entry',onConfirm:()=>{const nd={...data,entries:data.entries.filter(e=>e.id\!==confirmDelEntry)};setData(nd);setConfirmDelEntry(null);},onClose:()=>setConfirmDelEntry(null)}),
     showEntry&&h(EntryModal,{userId:user.id,userName:user.name,userRole:user.role,existing:editing,onSave:saveEntry,onClose:()=>{setShowEntry(false);setEditing(null)},cur}),
-    msg&&h('div',{className:'alert alert-success'},msg),
 
     // Header
     h('div',{className:'row-between page-header'},
@@ -799,15 +819,15 @@ function MyDashboard({data,setData,user,cur}){
     myEntries.length>0&&h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:24}},
       // Funnel
       funnelData.some(s=>s.value>0)&&h('div',{className:'card'},
-        h('div',{style:{fontSize:12,fontWeight:700,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'.08em',marginBottom:16}},'Conversion Funnel'),
-        h('div',{style:{display:'flex',justifyContent:'center'}},
+        h('div',{className:'chart-title'},'Conversion Funnel'),
+        h('div',{style:{display:'flex',justifyContent:'center',overflowX:'auto'}},
           h(FunnelChart,{stages:funnelData})
         )
       ),
       // Activity chart
       last14.some(d=>d.value>0)&&h('div',{className:'card'},
         h('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}},
-          h('div',{style:{fontSize:12,fontWeight:700,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'.08em'}},isSdr?'Daily Dials — Last 14 Days':'Daily Shows — Last 14 Days'),
+          h('div',{className:'chart-title'},isSdr?'Daily Dials — Last 14 Days':'Daily Shows — Last 14 Days'),
           h(Sparkline,{values:last14.map(d=>d.value)})
         ),
         h(BarChart,{data:last14,height:100}),
@@ -815,22 +835,29 @@ function MyDashboard({data,setData,user,cur}){
       )
     ),
 
+    last8WeeksRep.some(w=>w.val>0)&&h('div',{className:'card',style:{marginBottom:24}},
+      h('div',{className:'chart-title'},isSdr?'Dials — Last 8 Weeks':'Revenue — Last 8 Weeks'),
+      h('div',{style:{overflowX:'auto'}},
+        h(LineChart,{series:[{label:isSdr?'Dials':'Cash Gen',color:'#c4a35a',data:last8WeeksRep.map(w=>({x:w.label,y:w.val}))}],height:140})
+      )
+    ),
+
     // Gauges for rates
     (isCloser||isAdmin)&&myEntries.length>0&&h('div',{className:'card',style:{marginBottom:24}},
-      h('div',{style:{fontSize:12,fontWeight:700,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'.08em',marginBottom:20}},'Rate Performance'),
+      h('div',{className:'chart-title'},'Rate Performance'),
       h('div',{style:{display:'flex',gap:40,justifyContent:'center',flexWrap:'wrap'}},
         h('div',{style:{textAlign:'center'}},
-          h(GaugeArc,{pct:parseFloat(stats.showRate)||0,color:'#60a5fa'}),
+          h(GaugeArc,{pct:parseFloat(stats.showRate)||0,color:'#60a5fa',size:100}),
           h('div',{style:{fontSize:12,color:'var(--text2)',marginTop:4}},'Show Rate'),
           h('div',{style:{fontSize:11,color:'var(--text3)'}},'Target: 60%+')
         ),
         h('div',{style:{textAlign:'center'}},
-          h(GaugeArc,{pct:parseFloat(stats.closeRate)||0,color:'#4ade80'}),
+          h(GaugeArc,{pct:parseFloat(stats.closeRate)||0,color:'#4ade80',size:100}),
           h('div',{style:{fontSize:12,color:'var(--text2)',marginTop:4}},'Close Rate'),
           h('div',{style:{fontSize:11,color:'var(--text3)'}},'Target: 30%+')
         ),
         h('div',{style:{textAlign:'center'}},
-          h(GaugeArc,{pct:stats.cashColl>0&&stats.cashGen>0?Math.min(100,(stats.cashColl/stats.cashGen)*100):0,color:'#c4a35a'}),
+          h(GaugeArc,{pct:stats.cashColl>0&&stats.cashGen>0?Math.min(100,(stats.cashColl/stats.cashGen)*100):0,color:'#c4a35a',size:100}),
           h('div',{style:{fontSize:12,color:'var(--text2)',marginTop:4}},'Collection Rate'),
           h('div',{style:{fontSize:11,color:'var(--text3)'}},`${currency(cur,stats.cashColl)} collected`)
         )
@@ -891,7 +918,7 @@ function MyDashboard({data,setData,user,cur}){
               ]:[],
               h('td',null,h('div',{style:{display:'flex',gap:6}},
                 h('button',{className:'btn-ghost btn-sm',onClick:()=>{setEditing(r);setShowEntry(true)}},'Edit'),
-                h('button',{className:'btn-danger btn-sm',onClick:()=>delEntry(r.id)},'Del')
+                h('button',{className:'btn-danger btn-sm',onClick:()=>setConfirmDelEntry(r.id)},'Del')
               ))
             );
           }))
@@ -907,7 +934,6 @@ function TeamOverview({data,setData,clientId,cur,isSuper,readOnly}){
   const [timeline,setTimeline]=useState(getDefaultTimeline());
   const [showLog,setShowLog]=useState(false);
   const [logRep,setLogRep]=useState(null);
-  const [msg,setMsg]=useState('');
 
   const clientUsers=useMemo(()=>data.users.filter(u=>u.clientId===clientId&&u.active),[data.users,clientId]);
   const clientEntries=useMemo(()=>data.entries.filter(e=>e.clientId===clientId),[data.entries,clientId]);
@@ -915,6 +941,16 @@ function TeamOverview({data,setData,clientId,cur,isSuper,readOnly}){
   const filteredEntries=useMemo(()=>filterByTimeline(clientEntries,timeline),[clientEntries,timeline]);
 
   const teamStats=useMemo(()=>calcTeamStats(filteredEntries,clientUsers,null),[filteredEntries,clientUsers]);
+
+  const last8Weeks=useMemo(()=>{
+    return Array.from({length:8},(_,i)=>{
+      const wStart=new Date();wStart.setDate(wStart.getDate()-7*(7-i));
+      const wEnd=new Date(wStart);wEnd.setDate(wStart.getDate()+6);
+      const wEntries=clientEntries.filter(e=>{const d=parseEntryDate(e.date);return d>=wStart&&d<=wEnd;});
+      const label='W'+(i+1);
+      return{label,rev:sum(wEntries,'cs_cash_gen'),dials:sum(wEntries,'sdr_dials'),sales:sum(wEntries,'cs_pif')+sum(wEntries,'cs_instalment')};
+    });
+  },[clientEntries]);
 
   // All SDR objections
   const sdrIds=new Set(clientUsers.filter(u=>u.role==='SDR').map(u=>u.id));
@@ -937,12 +973,11 @@ function TeamOverview({data,setData,clientId,cur,isSuper,readOnly}){
   const saveEntry=f=>{
     const nd={...data,entries:[...data.entries,{...f,id:'e_'+Date.now(),clientId}]};
     setData(nd);setShowLog(false);setLogRep(null);
-    setMsg('Entry saved for '+logRep.name);setTimeout(()=>setMsg(''),3000);
+    toast('Entry saved for '+logRep.name);
   };
 
   return h('div',{className:'page'},
     showLog&&logRep&&h(EntryModal,{userId:logRep.id,userName:logRep.name,userRole:logRep.role,existing:null,onSave:saveEntry,onClose:()=>{setShowLog(false);setLogRep(null)},cur}),
-    msg&&h('div',{className:'alert alert-success'},msg),
 
     h('div',{className:'row-between page-header'},
       h('div',null,
@@ -959,7 +994,8 @@ function TeamOverview({data,setData,clientId,cur,isSuper,readOnly}){
       h('div',{className:'metric'},
         h('div',{className:'metric-label'},'Team Revenue'),
         h('div',{className:'metric-val text-gold'},currency(cur,teamStats.cashGen)),
-        h('div',{className:'metric-sub'},'Collected: '+currency(cur,teamStats.cashColl))
+        h('div',{className:'metric-sub'},'Collected: '+currency(cur,teamStats.cashColl)),
+        (()=>{const prevE=clientEntries.filter(e=>e.month===MONTHS[(new Date().getMonth()+11)%12]);const prevRev=prevE.reduce((a,x)=>a+(x.cs_cash_gen||0),0);const m=prevRev>0?((teamStats.cashGen-prevRev)/prevRev*100).toFixed(1):null;return m\!==null&&h('div',{className:'metric-trend '+(+m>=0?'trend-up':'trend-dn')},(+m>=0?'↑':'↓')+Math.abs(m)+'% vs '+MONTHS[(new Date().getMonth()+11)%12]);})()
       ),
       h('div',{className:'metric'},
         h('div',{className:'metric-label'},'Total Sales'),
@@ -981,6 +1017,21 @@ function TeamOverview({data,setData,clientId,cur,isSuper,readOnly}){
       h('div',{className:'metric'},h('div',{className:'metric-label'},'SDR Dials'),h('div',{className:'metric-val'},teamStats.dials.toLocaleString()),h('div',{className:'metric-sub'},'Connects: '+teamStats.connects)),
       h('div',{className:'metric'},h('div',{className:'metric-label'},'Connect Rate'),h('div',{className:'metric-val'},teamStats.connectRate),h('div',{className:'metric-sub'},'SDR connects ÷ dials')),
       h('div',{className:'metric'},h('div',{className:'metric-label'},'Book Rate'),h('div',{className:'metric-val'},teamStats.bookRate),h('div',{className:'metric-sub'},'SDR booked ÷ dials'))
+    ),
+
+    last8Weeks.some(w=>w.rev>0||w.dials>0)&&h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:24}},
+      h('div',{className:'card'},
+        h('div',{className:'chart-title'},'Revenue — Last 8 Weeks'),
+        h('div',{style:{overflowX:'auto'}},
+          h(LineChart,{series:[{label:'Cash Gen',color:'#c4a35a',data:last8Weeks.map(w=>({x:w.label,y:w.rev}))}],height:150})
+        )
+      ),
+      h('div',{className:'card'},
+        h('div',{className:'chart-title'},'Dials — Last 8 Weeks'),
+        h('div',{style:{overflowX:'auto'}},
+          h(LineChart,{series:[{label:'Dials',color:'#60a5fa',data:last8Weeks.map(w=>({x:w.label,y:w.dials}))}],height:150})
+        )
+      )
     ),
 
     // Rep table
@@ -1026,7 +1077,7 @@ function TeamOverview({data,setData,clientId,cur,isSuper,readOnly}){
     h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}},
       // Closer leaderboard
       closerLb.length>0&&h('div',{className:'card'},
-        h('div',{style:{fontSize:12,fontWeight:700,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'.08em',marginBottom:16}},'🏆 Closer Leaderboard — '+timelineLabel(timeline)),
+        h('div',{className:'chart-title'},'🏆 Closer Leaderboard — '+timelineLabel(timeline)),
         closerLb.map((u,i)=>h('div',{key:u.id,className:'lb-row'},
           h('div',{className:'lb-rank '+(i===0?'lb-rank-1':i===1?'lb-rank-2':i===2?'lb-rank-3':'')},i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1),
           h('div',{className:'avatar',style:{width:28,height:28,fontSize:10}},initials(u.name)),
@@ -1039,7 +1090,7 @@ function TeamOverview({data,setData,clientId,cur,isSuper,readOnly}){
       ),
       // Objections
       objCount.length>0&&h('div',{className:'card'},
-        h('div',{style:{fontSize:12,fontWeight:700,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'.08em',marginBottom:16}},'💬 Top Objections — SDR Team'),
+        h('div',{className:'chart-title'},'💬 Top Objections — SDR Team'),
         objCount.map(([obj,cnt],i)=>{
           const maxCnt=objCount[0][1];
           return h('div',{key:i,className:'perf-bar-row'},
@@ -1060,7 +1111,6 @@ function TeamOverview({data,setData,clientId,cur,isSuper,readOnly}){
 function ManageTeam({data,setData,clientId,currentUserId}){
   const [showModal,setShowModal]=useState(false);
   const [editRep,setEditRep]=useState(null);
-  const [msg,setMsg]=useState('');
 
   const clientUsers=data.users.filter(u=>u.clientId===clientId);
   const client=data.clients.find(c=>c.id===clientId)||{name:'Kryson'};
@@ -1090,29 +1140,33 @@ function ManageTeam({data,setData,clientId,currentUserId}){
     const nd={...data};
     if(editRep){
       nd.users=nd.users.map(u=>u.id===editRep.id?{...u,...f,password:f.password||u.password}:u);
-      setMsg('Rep updated');
+      toast('Rep updated');
     } else {
       const existing=nd.users.find(u=>u.email.toLowerCase()===f.email.toLowerCase());
-      if(existing){setMsg('A user with this email already exists');return;}
+      if(existing){toast('A user with this email already exists','error');return;}
       nd.users=[...nd.users,{...f,id:'u_'+Date.now(),clientId,createdAt:new Date().toISOString().split('T')[0]}];
       sendRepWelcomeEmail(f.name,f.email,f.password,f.role);
       if(!getEjSettings()?.enabled)setMsg(f.name+' added successfully');
     }
     setData(nd);setShowModal(false);setEditRep(null);
-    setTimeout(()=>setMsg(''),5000);
   };
 
+  const [confirmDel,setConfirmDel]=useState(null);
+  const [repSearch,setRepSearch]=useState('');
   return h('div',{className:'page'},
+    confirmDel&&h(ConfirmModal,{title:'Delete '+confirmDel.name+'?',body:'This permanently removes their account and all their logged entries. Cannot be undone.',confirmLabel:'Delete permanently',onConfirm:()=>{const nd={...data,users:data.users.filter(x=>x.id\!==confirmDel.id),entries:data.entries.filter(e=>e.userId\!==confirmDel.id)};setData(nd);toast(confirmDel.name+' deleted.');},onClose:()=>setConfirmDel(null)}),
     showModal&&h(RepModal,{rep:editRep,clientId,onSave:handleSave,onClose:()=>{setShowModal(false);setEditRep(null)}}),
-    msg&&h('div',{className:'alert alert-success'},msg),
     h('div',{className:'row-between page-header'},
       h('div',null,h('div',{className:'page-title'},'Manage Team'),h('div',{className:'page-sub'},clientUsers.filter(u=>u.active).length+' active · '+clientUsers.filter(u=>!u.active).length+' inactive')),
       h('button',{className:'btn-primary',onClick:()=>{setEditRep(null);setShowModal(true)}},'+ Add rep')
     ),
+    h('div',{style:{marginBottom:16}},
+      h('input',{value:repSearch,onChange:ev=>setRepSearch(ev.target.value),placeholder:'Search reps…',style:{maxWidth:280}})
+    ),
     h('div',{className:'table-wrap'},
       h('table',null,
         h('thead',null,h('tr',null,['Name','Email','Role','Status','Since','Targets',''].map(hd=>h('th',{key:hd},hd)))),
-        h('tbody',null,clientUsers.map(u=>{
+        h('tbody',null,clientUsers.filter(u=>\!repSearch||u.name.toLowerCase().includes(repSearch.toLowerCase())||u.email.toLowerCase().includes(repSearch.toLowerCase())||u.role.toLowerCase().includes(repSearch.toLowerCase())).map(u=>{
           const t=u.targets||{};
           return h('tr',{key:u.id},
             h('td',null,h('div',{style:{display:'flex',alignItems:'center',gap:8}},h('div',{className:'avatar',style:{width:28,height:28,fontSize:10}},initials(u.name)),h('span',{className:'td-name'},u.name))),
@@ -1134,7 +1188,7 @@ function ManageTeam({data,setData,clientId,currentUserId}){
                   if(!confirm(`Delete ${u.name}?\n\nThis will permanently remove their account and all their logged entries. This cannot be undone.`))return;
                   const nd={...data,users:data.users.filter(x=>x.id!==u.id),entries:data.entries.filter(e=>e.userId!==u.id)};
                   setData(nd);
-                  setMsg(u.name+' deleted.');setTimeout(()=>setMsg(''),4000);
+                  toast(u.name+' deleted.');
                 }
               },'Delete')
             ))
@@ -1285,7 +1339,7 @@ function OnboardModal({onSave,onClose}){
           h('div',{className:'form-group'},h('label',{className:'form-label'},'Industry'),h('select',{value:f.industry,onChange:ev=>set('industry',ev.target.value)},INDUSTRIES.map(i=>h('option',{key:i},i)))),
           h('div',{className:'form-group'},h('label',{className:'form-label'},'Currency'),h('select',{value:f.currency,onChange:ev=>set('currency',ev.target.value)},CURRENCIES.map(c=>h('option',{key:c.sym,value:c.sym},c.label))))
         ),
-        h('div',{className:'form-group'},h('label',{className:'form-label'},'Monthly revenue target'),h('input',{type:'number',min:0,value:f.targetRevenue||'',onChange:ev=>set('targetRevenue',parseFloat(ev.target.value)||0)})),
+        h('div',{className:'form-group'},h('label',{className:'form-label'},'Monthly revenue target'),h('input',{type:'number',min:0,value:f.targetRevenue??'',onChange:ev=>set('targetRevenue',ev.target.value===''?0:parseFloat(ev.target.value)||0)})),
         h('div',{className:'form-group'},
           h('label',{className:'form-label'},'Accent colour'),
           h('div',{style:{display:'flex',gap:10,marginTop:6}},
@@ -1323,8 +1377,9 @@ function SuperAdminApp({data,setData,onLogout}){
   const [tab,setTab]=useState('clients');
   const [showOnboard,setShowOnboard]=useState(false);
   const [viewClient,setViewClient]=useState(null);
+  const [confirmDelClient,setConfirmDelClient]=useState(null);
+  const [clientSearch,setClientSearch]=useState('');
   const [viewClientAdminUser,setViewClientAdminUser]=useState(null);
-  const [msg,setMsg]=useState('');
   const [emailMsg,setEmailMsg]=useState('');
   const month=nowMonth();
 
@@ -1364,6 +1419,29 @@ function SuperAdminApp({data,setData,onLogout}){
     return{totalRevenue,totalSales,totalDials,totalShowed,clients:data.clients.filter(c=>c.active).length,reps:data.users.filter(u=>u.active&&u.role!=='Admin').length};
   },[data]);
 
+  const prevMonthName=MONTHS[(new Date().getMonth()+11)%12];
+  const allStatsPrev=useMemo(()=>{
+    const e=data.entries.filter(e2=>e2.month===prevMonthName);
+    return{
+      totalRevenue:e.reduce((a,x)=>a+(x.cs_cash_gen||0),0),
+      totalSales:e.reduce((a,x)=>a+(x.cs_pif||0)+(x.cs_instalment||0),0),
+      totalDials:e.reduce((a,x)=>a+(x.sdr_dials||0),0),
+    };
+  },[data.entries,prevMonthName]);
+  const momPct=(curr,prev)=>prev>0?((curr-prev)/prev*100).toFixed(1):null;
+
+  const last6Months=useMemo(()=>{
+    const now=new Date();
+    return Array.from({length:6},(_,i)=>{
+      const d=new Date(now.getFullYear(),now.getMonth()-5+i,1);
+      const mName=MONTHS[d.getMonth()];
+      const rev=data.entries.filter(e=>e.month===mName).reduce((a,x)=>a+(x.cs_cash_gen||0),0);
+      const sales=data.entries.filter(e=>e.month===mName).reduce((a,x)=>a+(x.cs_pif||0)+(x.cs_instalment||0),0);
+      const dials=data.entries.filter(e=>e.month===mName).reduce((a,x)=>a+(x.sdr_dials||0),0);
+      return{month:mName.slice(0,3),rev,sales,dials};
+    });
+  },[data.entries]);
+
   const onboardClient=f=>{
     const clientId='c_'+Date.now();
     const adminId='u_'+Date.now();
@@ -1377,10 +1455,10 @@ function SuperAdminApp({data,setData,onLogout}){
     sendWelcomeEmail(f.adminName,f.adminEmail,f.adminPassword,f.clientName)
       .then(r=>{
         if(r==='skipped')return;
-        setMsg(`✓ ${f.clientName} onboarded — welcome email sent to ${f.adminEmail} ✉️`);
+        toast(`✓ ${f.clientName} onboarded — welcome email sent to ${f.adminEmail} ✉️`);
       })
       .catch(()=>{
-        setMsg(`✓ ${f.clientName} onboarded — but email failed. Check Settings → Email.`);
+        toast(`✓ ${f.clientName} onboarded — but email failed. Check Settings → Email.`,'error');
       });
   };
 
@@ -1397,7 +1475,7 @@ function SuperAdminApp({data,setData,onLogout}){
       entries:data.entries.filter(e=>e.clientId!==id)
     };
     setData(nd);
-    setMsg(name+' deleted permanently.');setTimeout(()=>setMsg(''),5000);
+    toast(name+' deleted permanently.');
   };
 
   // If viewing a client's admin panel
@@ -1435,9 +1513,9 @@ function SuperAdminApp({data,setData,onLogout}){
     ),
 
     h('div',{className:'page'},
+      confirmDelClient&&h(ConfirmModal,{title:'Delete "'+confirmDelClient.name+'"?',body:'This permanently removes the client, all their users, and all data entries. Cannot be undone.',confirmLabel:'Delete permanently',onConfirm:()=>{const nd={...data,clients:data.clients.filter(c=>c.id\!==confirmDelClient.id),users:data.users.filter(u=>u.clientId\!==confirmDelClient.id),entries:data.entries.filter(e=>e.clientId\!==confirmDelClient.id)};setData(nd);toast(confirmDelClient.name+' deleted permanently.');setConfirmDelClient(null);},onClose:()=>setConfirmDelClient(null)}),
       showOnboard&&h(OnboardModal,{onSave:onboardClient,onClose:()=>setShowOnboard(false)}),
-      msg&&h('div',{className:'alert alert-success'},msg),
-
+  
       tab==='clients'&&h('div',null,
         // Super admin aggregate metrics
         h('div',{className:'row-between page-header'},
@@ -1450,16 +1528,15 @@ function SuperAdminApp({data,setData,onLogout}){
 
         h('div',{className:'metric-grid'},
           h('div',{className:'metric'},h('div',{className:'metric-label'},'Active Clients'),h('div',{className:'metric-val text-gold'},allStats.clients),h('div',{className:'metric-sub'},'Managed by Kryson')),
-          h('div',{className:'metric'},h('div',{className:'metric-label'},'Total Revenue'),h('div',{className:'metric-val text-gold'},'£'+Math.round(allStats.totalRevenue).toLocaleString()),h('div',{className:'metric-sub'},'All clients combined')),
-          h('div',{className:'metric'},h('div',{className:'metric-label'},'Total Sales'),h('div',{className:'metric-val'},allStats.totalSales.toLocaleString()),h('div',{className:'metric-sub'},'PIF + Instalments')),
+          h('div',{className:'metric'},h('div',{className:'metric-label'},'Total Revenue'),h('div',{className:'metric-val text-gold'},'£'+Math.round(allStats.totalRevenue).toLocaleString()),h('div',{className:'metric-sub'},'All clients combined'),(()=>{const m=momPct(allStats.totalRevenue,allStatsPrev.totalRevenue);return m\!==null&&h('div',{className:'metric-trend '+(+m>=0?'trend-up':'trend-dn')},(+m>=0?'↑':'↓')+Math.abs(m)+'% vs '+prevMonthName);})()),
+          h('div',{className:'metric'},h('div',{className:'metric-label'},'Total Sales'),h('div',{className:'metric-val'},allStats.totalSales.toLocaleString()),h('div',{className:'metric-sub'},'PIF + Instalments'),(()=>{const m=momPct(allStats.totalSales,allStatsPrev.totalSales);return m\!==null&&h('div',{className:'metric-trend '+(+m>=0?'trend-up':'trend-dn')},(+m>=0?'↑':'↓')+Math.abs(m)+'% vs '+prevMonthName);})()),
           h('div',{className:'metric'},h('div',{className:'metric-label'},'Active Reps'),h('div',{className:'metric-val'},allStats.reps),h('div',{className:'metric-sub'},allStats.clients+' client teams'))
         ),
 
         // Client cards grid
         data.clients.length===0
-          ?h('div',{className:'card empty'},h('div',{className:'empty-icon'},'🏢'),h('div',{style:{fontWeight:600,marginBottom:6}},'No clients yet'),h('div',{style:{fontSize:13,marginBottom:20}},'Onboard your first client to get started'),h('button',{className:'btn-primary',onClick:()=>setShowOnboard(true)},'+ Onboard First Client'))
           :h('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))',gap:16}},
-            data.clients.map(client=>{
+            filteredClients.map(client=>{
               const cEntries=data.entries.filter(e=>e.clientId===client.id);
               const cUsers=data.users.filter(u=>u.clientId===client.id&&u.active);
               const mEntries=cEntries.filter(e=>e.month===month);
@@ -1500,13 +1577,14 @@ function SuperAdminApp({data,setData,onLogout}){
                     h('button',{
                       className:'btn-danger btn-sm',
                       style:{fontSize:11},
-                      onClick:(ev)=>{ev.stopPropagation();deleteClient(client.id,client.name);}
+                      onClick:(ev)=>{ev.stopPropagation();deleteClient(client);}
                     },'Delete')
                   )
                 )
               );
             })
           )
+        })())
       ),
 
       tab==='settings'&&h('div',null,
@@ -1682,6 +1760,61 @@ function Login({onLogin,data}){
 // ═══════════════════════════════════════════════════════
 // ROOT APP
 // ═══════════════════════════════════════════════════════
+
+function LineChart({series,height=160,showDots=true}){
+  if(\!series||\!series.length)return null;
+  const W=500,H=height,padL=38,padR=12,padT=10,padB=28;
+  const innerW=W-padL-padR,innerH=H-padT-padB;
+  const allY=series.flatMap(s=>s.data.map(d=>d.y));
+  const allX=(series[0]&&series[0].data.map(d=>d.x))||[];
+  const maxY=Math.max(...allY,1);
+  const xScale=i=>(i/(Math.max(allX.length-1,1)))*innerW;
+  const yScale=v=>innerH-(v/maxY)*innerH;
+  const yTicks=[0,0.25,0.5,0.75,1].map(f=>({v:Math.round(maxY*f),y:yScale(maxY*f)}));
+  return h('svg',{width:'100%',viewBox:`0 0 ${W} ${H}`,style:{overflow:'visible',display:'block'}},
+    yTicks.map((t,i)=>h('g',{key:i},
+      h('line',{x1:padL,y1:padT+t.y,x2:padL+innerW,y2:padT+t.y,stroke:'#1f1f28',strokeWidth:1}),
+      h('text',{x:padL-5,y:padT+t.y+4,textAnchor:'end',fill:'#5a5866',fontSize:9,fontFamily:'Inter,sans-serif'},
+        t.v>=1000?(t.v/1000).toFixed(1)+'k':t.v)
+    )),
+    allX.map((lbl,i)=>i%Math.max(1,Math.floor(allX.length/8))===0&&h('text',{key:i,x:padL+xScale(i),y:H-4,textAnchor:'middle',fill:'#5a5866',fontSize:9,fontFamily:'Inter,sans-serif'},lbl)),
+    series.map((s,si)=>{
+      if(\!s.data||\!s.data.length)return null;
+      const pts=s.data.map((d,i)=>`${padL+xScale(i)},${padT+yScale(d.y)}`).join(' ');
+      const areaBottom=padT+innerH;
+      const firstX=padL+xScale(0),lastX=padL+xScale(s.data.length-1);
+      const areaPath=`M${firstX},${areaBottom} `+s.data.map((d,i)=>`L${padL+xScale(i)},${padT+yScale(d.y)}`).join(' ')+` L${lastX},${areaBottom} Z`;
+      return h('g',{key:si},
+        h('path',{d:areaPath,fill:s.color+'18',stroke:'none'}),
+        h('polyline',{points:pts,fill:'none',stroke:s.color,strokeWidth:2,strokeLinejoin:'round',strokeLinecap:'round'}),
+        showDots&&s.data.map((d,i)=>h('circle',{key:i,cx:padL+xScale(i),cy:padT+yScale(d.y),r:3,fill:s.color,stroke:'var(--bg)',strokeWidth:1.5}))
+      );
+    }),
+    series.map((s,i)=>h('g',{key:'leg'+i,transform:`translate(${padL+i*130},${H-10})`},
+      h('rect',{x:0,y:-6,width:10,height:3,fill:s.color,rx:2}),
+      h('text',{x:14,y:0,fill:'#9896a0',fontSize:9,fontFamily:'Inter,sans-serif'},s.label)
+    ))
+  );
+}
+
+function ConfirmModal({title,body,confirmLabel,onConfirm,onClose}){
+  confirmLabel=confirmLabel||'Delete';
+  return h('div',{className:'modal-backdrop',onClick:ev=>ev.target===ev.currentTarget&&onClose()},
+    h('div',{className:'modal',style:{maxWidth:420}},
+      h('div',{className:'modal-title',style:{fontSize:16}},title),
+      body&&h('div',{style:{fontSize:13,color:'var(--text3)',marginBottom:20,lineHeight:1.6}},body),
+      h('div',{className:'modal-footer'},
+        h('button',{className:'btn-ghost',onClick:onClose},'Cancel'),
+        h('button',{className:'btn-danger',style:{padding:'9px 20px'},onClick:()=>{onConfirm();onClose();}},confirmLabel)
+      )
+    )
+  );
+}
+
+let _toastSetFn=null;
+function toast(msg,type){type=type||'success';if(_toastSetFn){const id=Date.now();_toastSetFn(function(t){return[...t,{id,msg,type}];});setTimeout(function(){_toastSetFn(function(t){return t.filter(function(x){return x.id\!==id;});});},3200);}}
+function ToastLayer(){const[toasts,setToasts]=useState([]);useEffect(function(){_toastSetFn=setToasts;return function(){_toastSetFn=null;};},[]);return h('div',{className:'toast-wrap'},toasts.map(function(t){return h('div',{key:t.id,className:'toast toast-'+t.type},t.msg);}));}
+
 function App(){
   const [user,setUser]=useState(null);
   const [data,setDataRaw]=useState({clients:[],users:[],entries:[]});
@@ -1706,20 +1839,20 @@ function App(){
   const handleLogout=()=>setUser(null);
 
   // Loading screen
-  if(appLoading)return h('div',{className:'login-wrap'},
+  if(appLoading)return h(React.Fragment,null,h(ToastLayer),h('div',{className:'login-wrap'},
     h('div',{style:{textAlign:'center'}},
       h('div',{className:'login-logo-mark',style:{width:56,height:56,background:'var(--gold)',borderRadius:14,display:'inline-flex',alignItems:'center',justifyContent:'center',fontSize:26,fontWeight:700,color:'#0a0808',marginBottom:16,letterSpacing:'-.04em'}},'K'),
       h('div',{style:{color:'var(--text3)',fontSize:13,marginTop:4}},'Connecting to database…')
     )
-  );
+  ));
 
   // DB error screen
-  if(dbError)return h('div',{className:'login-wrap'},
+  if(dbError)return h(React.Fragment,null,h(ToastLayer),h('div',{className:'login-wrap'},
     h('div',{className:'login-box'},
       h('div',{className:'alert alert-danger'},dbError),
       h('button',{className:'btn-primary',style:{width:'100%',marginTop:12},onClick:()=>{setDbError('');setAppLoading(true);loadFromDB().then(d=>{setDataRaw(d);prevData.current=d;setAppLoading(false);}).catch(()=>setDbError('Still cannot connect. Check your connection.'));}},'Retry')
     )
-  );
+  ));
 
   if(!user)return h(Login,{onLogin:handleLogin,data});
 
